@@ -1,0 +1,38 @@
+{
+  "name": "@kngl/web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@kngl/shared": "1.0.0",
+    "bcryptjs": "3.0.3",
+    "bullmq": "5.66.1",
+    "ioredis": "5.8.2",
+    "lucide-react": "0.577.0",
+    "next": "16.3.4",
+    "pg": "8.20.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "server-only": "0.0.1",
+    "socket.io-client": "4.8.3",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.2.2",
+    "@types/node": "22.19.15",
+    "@types/pg": "8.16.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.4",
+    "postcss": "8.5.6",
+    "tailwindcss": "4.2.2",
+    "typescript": "5.9.3"
+  }
+}

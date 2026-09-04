@@ -1,0 +1,439 @@
+[
+  {
+    "slug": "kahvaltida-son-simit",
+    "title": "Kahvaltıda son simit",
+    "source": "Dizi",
+    "description": "Pazar sabahı, masada tek bir simit ve iki kararlı kardeş. Kimse geri adım atmıyor.",
+    "durationSeconds": 42,
+    "thumbnailUrl": "/thumbs/kahvaltida-son-simit.svg",
+    "videoUrl": "/media/scenes/kahvaltida-son-simit.mp4",
+    "isVip": false,
+    "playCount": 1834,
+    "createdAt": "2026-06-02T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Deniz", "color": "#ff5d73" },
+      { "id": "c2", "name": "Ege", "color": "#5ea8ff" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "O simit benim. Dün gece rüyamda gördüm.", "start": 1.2, "end": 5.0 },
+      { "id": "l2", "characterId": "c2", "text": "Rüya görmek mülkiyet hakkı vermez Deniz.", "start": 5.6, "end": 9.4 },
+      { "id": "l3", "characterId": "c1", "text": "Annem sana dedi ki 'kardeşine bırak'. Duydum.", "start": 10.0, "end": 14.8 },
+      { "id": "l4", "characterId": "c2", "text": "Annem uyuyor. Kimse kimseye bir şey demedi.", "start": 15.4, "end": 19.9 },
+      { "id": "l5", "characterId": "c1", "text": "Tamam. Ortadan bölelim. Ama susamlı taraf benim.", "start": 22.0, "end": 27.5 },
+      { "id": "l6", "characterId": "c2", "text": "Simidin tamamı susamlı Deniz. Tamamı.", "start": 28.2, "end": 33.0 }
+    ]
+  },
+  {
+    "slug": "asansorde-yanlis-kat",
+    "title": "Asansörde yanlış kat",
+    "source": "Komedi",
+    "description": "Üç yabancı, bozuk bir asansör ve on dokuzuncu kata çıkmakta ısrar eden bir düğme.",
+    "durationSeconds": 55,
+    "thumbnailUrl": "/thumbs/asansorde-yanlis-kat.svg",
+    "videoUrl": "/media/scenes/asansorde-yanlis-kat.mp4",
+    "isVip": false,
+    "playCount": 2210,
+    "createdAt": "2026-06-05T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Kurye", "color": "#ffb443" },
+      { "id": "c2", "name": "Müdür", "color": "#8f7bff" },
+      { "id": "c3", "name": "Teyze", "color": "#3fd0a8" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Dördü bastım ama on dokuza çıkıyoruz. Bu normal mi?", "start": 0.8, "end": 4.6 },
+      { "id": "l2", "characterId": "c2", "text": "Bu binada hiçbir şey normal değil evladım. Ben on beş yıldır on dokuza çıkamadım.", "start": 5.2, "end": 11.0 },
+      { "id": "l3", "characterId": "c3", "text": "Ben zaten inmek istiyordum. Çıkıyoruz ama, değil mi?", "start": 11.8, "end": 15.5 },
+      { "id": "l4", "characterId": "c1", "text": "Paket soğuyor. Müşteri beni değil asansörü şikayet etsin.", "start": 17.0, "end": 21.6 },
+      { "id": "l5", "characterId": "c2", "text": "Şikayet kutusu on dokuzuncu katta. Tebrikler, ilk kez gidiyorsun.", "start": 22.4, "end": 27.8 },
+      { "id": "l6", "characterId": "c3", "text": "Çocuklar, ışıklar söndü. Kimse kımıldamasın, ben şarkı söyleyeyim.", "start": 30.0, "end": 35.5 }
+    ]
+  },
+  {
+    "slug": "marsa-ilk-adim",
+    "title": "Mars'a ilk adım",
+    "source": "Film",
+    "description": "İnsanlığın en büyük anı. Kapı açılır, tarih yazılacak. Kimse kameranın kapalı olduğunu fark etmez.",
+    "durationSeconds": 68,
+    "thumbnailUrl": "/thumbs/marsa-ilk-adim.svg",
+    "videoUrl": "/media/scenes/marsa-ilk-adim.mp4",
+    "isVip": false,
+    "playCount": 3120,
+    "createdAt": "2026-06-09T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Komutan Aras", "color": "#ff7a45" },
+      { "id": "c2", "name": "Görev Kontrol", "color": "#4cc9f0" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c2", "text": "Aras, tüm dünya seni izliyor. Cümlen hazır mı?", "start": 1.0, "end": 5.2 },
+      { "id": "l2", "characterId": "c1", "text": "Hazır. Küçük bir adım... Bekle. Ayakkabımın bağcığı çözüldü.", "start": 6.0, "end": 12.0 },
+      { "id": "l3", "characterId": "c2", "text": "Aras, canlı yayındayız. Bağcık sonra.", "start": 12.8, "end": 16.4 },
+      { "id": "l4", "characterId": "c1", "text": "Kırmızı gezegende düşerek tarihe geçmek istemiyorum. Bir saniye.", "start": 17.2, "end": 22.8 },
+      { "id": "l5", "characterId": "c2", "text": "...Kamera kapalıymış. On dakikadır. Baştan alalım mı?", "start": 40.0, "end": 45.6 },
+      { "id": "l6", "characterId": "c1", "text": "Küçük bir adım. Dev bir sinir krizi.", "start": 46.5, "end": 51.0 }
+    ]
+  },
+  {
+    "slug": "kedi-dedektif-kayip-balik",
+    "title": "Kedi Dedektif: Kayıp balık",
+    "source": "Çizgi film",
+    "description": "Mutfakta bir balık kayboldu. Şüpheliler: bir köpek, bir papağan ve dedektifin kendisi.",
+    "durationSeconds": 59,
+    "thumbnailUrl": "/thumbs/kedi-dedektif-kayip-balik.svg",
+    "videoUrl": "/media/scenes/kedi-dedektif-kayip-balik.mp4",
+    "isVip": false,
+    "playCount": 4015,
+    "createdAt": "2026-06-14T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Dedektif Pamuk", "color": "#f4d35e" },
+      { "id": "c2", "name": "Köpek Karabaş", "color": "#a3785a" },
+      { "id": "c3", "name": "Papağan Zeki", "color": "#3fd0a8" },
+      { "id": "c4", "name": "Anlatıcı", "color": "#8f7bff" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c4", "text": "Saat tam üçte, mutfaktan bir çığlık yükseldi. Balık gitmişti.", "start": 0.5, "end": 5.5 },
+      { "id": "l2", "characterId": "c1", "text": "Kimse odadan çıkmasın. Bu balığı bulacağım. Muhtemelen içimde.", "start": 6.2, "end": 11.4 },
+      { "id": "l3", "characterId": "c2", "text": "Ben yapmadım! Ben sadece kokladım. Çok. Uzun süre.", "start": 12.0, "end": 16.6 },
+      { "id": "l4", "characterId": "c3", "text": "Ben gördüm! Ben gördüm! Söylemem ama. Kraker ver.", "start": 17.5, "end": 21.8 },
+      { "id": "l5", "characterId": "c1", "text": "Bir kraker için adalet mi satılır? ...Kaç kraker?", "start": 23.0, "end": 28.0 },
+      { "id": "l6", "characterId": "c4", "text": "Ve böylece, dava kapandı. Balık asla bulunamadı. Herkes bir şeyler biliyordu.", "start": 47.0, "end": 53.5 }
+    ]
+  },
+  {
+    "slug": "yarim-kalan-evlilik-teklifi",
+    "title": "Yarım kalan evlilik teklifi",
+    "source": "Dizi",
+    "description": "Restoran, mumlar, keman... ve yanlış masaya diz çöken bir adam.",
+    "durationSeconds": 47,
+    "thumbnailUrl": "/thumbs/yarim-kalan-evlilik-teklifi.svg",
+    "videoUrl": "/media/scenes/yarim-kalan-evlilik-teklifi.mp4",
+    "isVip": false,
+    "playCount": 1560,
+    "createdAt": "2026-06-18T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Mert", "color": "#ff5d73" },
+      { "id": "c2", "name": "Yabancı Kadın", "color": "#4cc9f0" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Selin, üç yıldır bu anı bekliyorum. Benimle...", "start": 1.0, "end": 5.5 },
+      { "id": "l2", "characterId": "c2", "text": "Ben Selin değilim. Ama devam edin, merak ettim.", "start": 6.0, "end": 10.2 },
+      { "id": "l3", "characterId": "c1", "text": "Kemancı, dur. Dur dedim. Neden hâlâ çalıyorsun?", "start": 11.0, "end": 15.4 },
+      { "id": "l4", "characterId": "c2", "text": "Yüzük güzelmiş. Selin arka masada, yanlış yerde yüzük takan adamı izliyor.", "start": 16.5, "end": 22.8 },
+      { "id": "l5", "characterId": "c1", "text": "Selin... bu bir provaydı. Şimdi gerçeği. Hayır, kalkma, lütfen kalkma.", "start": 24.0, "end": 30.5 }
+    ]
+  },
+  {
+    "slug": "muhtesem-utu-reklami",
+    "title": "Muhteşem ütü reklamı",
+    "source": "Reklam",
+    "description": "Tek karakter, tek nefes, kırk saniyede on yedi özellik. Kim daha hızlı okuyabilir?",
+    "durationSeconds": 20,
+    "thumbnailUrl": "/thumbs/muhtesem-utu-reklami.svg",
+    "videoUrl": "/media/scenes/muhtesem-utu-reklami.mp4",
+    "isVip": false,
+    "playCount": 980,
+    "createdAt": "2026-06-21T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Sunucu", "color": "#ffb443" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Kırışıklık mı? Artık geçmişte kaldı! Ütü Efendi ile gömlekler kendini ütülüyor!", "start": 0.5, "end": 6.0 },
+      { "id": "l2", "characterId": "c1", "text": "Buharlı, buharsız, kablolu, kablosuz, hatta ütüsüz! Hemen arayın!", "start": 6.5, "end": 12.5 },
+      { "id": "l3", "characterId": "c1", "text": "İlk yüz arayana ikinci ütü bedava. Ütüler tükendi. Yine de arayın.", "start": 13.0, "end": 19.0 }
+    ]
+  },
+  {
+    "slug": "mac-sonu-basin-toplantisi",
+    "title": "Maç sonu basın toplantısı",
+    "source": "Efsane an",
+    "description": "Teknik direktör yenilgiyi açıklıyor. Muhabir aynı soruyu beşinci kez soruyor.",
+    "durationSeconds": 38,
+    "thumbnailUrl": "/thumbs/mac-sonu-basin-toplantisi.svg",
+    "videoUrl": "/media/scenes/mac-sonu-basin-toplantisi.mp4",
+    "isVip": false,
+    "playCount": 2760,
+    "createdAt": "2026-06-25T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Teknik Direktör", "color": "#ff7a45" },
+      { "id": "c2", "name": "Muhabir", "color": "#5ea8ff" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c2", "text": "Hocam, yedi gol yediniz. Savunma planınız neydi?", "start": 0.8, "end": 4.8 },
+      { "id": "l2", "characterId": "c1", "text": "Planımız gol yememekti. Plan tutmadı. Bu kadar basit.", "start": 5.4, "end": 10.0 },
+      { "id": "l3", "characterId": "c2", "text": "Peki ikinci yarıda kaleciyi neden forvete aldınız?", "start": 10.8, "end": 14.6 },
+      { "id": "l4", "characterId": "c1", "text": "Kaleci gol yemekten sıkıldığını söyledi. Ben de 'git at' dedim. Attı mı? Hayır.", "start": 15.4, "end": 22.0 },
+      { "id": "l5", "characterId": "c2", "text": "Son soru: istifa edecek misiniz?", "start": 23.0, "end": 26.0 },
+      { "id": "l6", "characterId": "c1", "text": "Ben zaten iki hafta önce istifa ettim. Kimse okumamış. Teşekkürler.", "start": 27.0, "end": 33.0 }
+    ]
+  },
+  {
+    "slug": "uzay-gemisinde-kahve-molasi",
+    "title": "Uzay gemisinde kahve molası",
+    "source": "Film",
+    "description": "Sıfır yerçekiminde kahve, yanlış tuşa basan bir çaylak ve sakin kalmaya çalışan bir kaptan.",
+    "durationSeconds": 72,
+    "thumbnailUrl": "/thumbs/uzay-gemisinde-kahve-molasi.svg",
+    "videoUrl": "/media/scenes/uzay-gemisinde-kahve-molasi.mp4",
+    "isVip": false,
+    "playCount": 1420,
+    "createdAt": "2026-06-30T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Kaptan Lale", "color": "#8f7bff" },
+      { "id": "c2", "name": "Çaylak Umut", "color": "#3fd0a8" },
+      { "id": "c3", "name": "Gemi Bilgisayarı", "color": "#4cc9f0" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c2", "text": "Kaptan, kahveyi bardağa koydum ama bardak kahvenin içinde yüzüyor.", "start": 1.0, "end": 6.0 },
+      { "id": "l2", "characterId": "c1", "text": "Umut, uzayda bardak kullanmıyoruz. Bunu ilk gün konuştuk.", "start": 6.6, "end": 11.4 },
+      { "id": "l3", "characterId": "c3", "text": "Uyarı: Kabinde sıvı tespit edildi. Kahve. Sütlü. Şekersiz.", "start": 12.2, "end": 17.6 },
+      { "id": "l4", "characterId": "c2", "text": "Bilgisayar nasıl bildi şekersiz olduğunu?", "start": 18.4, "end": 21.8 },
+      { "id": "l5", "characterId": "c3", "text": "Kahveni tattım Umut. Kötüydü.", "start": 22.5, "end": 26.0 },
+      { "id": "l6", "characterId": "c1", "text": "Kimse kimseyi tatmasın. Herkes yerine. Ben de biraz uzaya bakacağım.", "start": 50.0, "end": 56.5 }
+    ]
+  },
+  {
+    "slug": "ejderha-ve-muhasebeci",
+    "title": "Ejderha ve muhasebeci",
+    "source": "Çizgi film",
+    "description": "Ejderha hazinesini beyan etmek zorunda. Muhasebeci ise ateşe dayanıklı değil.",
+    "durationSeconds": 51,
+    "thumbnailUrl": "/thumbs/ejderha-ve-muhasebeci.svg",
+    "videoUrl": "/media/scenes/ejderha-ve-muhasebeci.mp4",
+    "isVip": false,
+    "playCount": 1975,
+    "createdAt": "2026-07-04T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Ejderha Kızıl", "color": "#ff5d73" },
+      { "id": "c2", "name": "Muhasebeci Fikret", "color": "#f4d35e" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c2", "text": "Sayın Kızıl, altın dağınızı beyan etmemişsiniz. Üç yüz yıldır.", "start": 1.0, "end": 6.2 },
+      { "id": "l2", "characterId": "c1", "text": "Altın değil o. Hatıra. Her birinin bir hikâyesi var.", "start": 7.0, "end": 11.8 },
+      { "id": "l3", "characterId": "c2", "text": "Hatıra da vergiye tabi. Özellikle bu kadar parlaksa.", "start": 12.5, "end": 16.8 },
+      { "id": "l4", "characterId": "c1", "text": "Seni yakmamamın tek sebebi kalemini beğenmiş olmam.", "start": 17.6, "end": 22.0 },
+      { "id": "l5", "characterId": "c2", "text": "Kalem hediye. Faturayı masaya bırakıyorum. Koşarak.", "start": 23.0, "end": 27.5 }
+    ]
+  },
+  {
+    "slug": "trafikte-felsefe",
+    "title": "Trafikte felsefe",
+    "source": "Komedi",
+    "description": "Yirmi dakikadır aynı ışıkta bekleyen iki arkadaş hayatın anlamını tartışıyor.",
+    "durationSeconds": 44,
+    "thumbnailUrl": "/thumbs/trafikte-felsefe.svg",
+    "videoUrl": "/media/scenes/trafikte-felsefe.mp4",
+    "isVip": false,
+    "playCount": 1230,
+    "createdAt": "2026-07-08T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Sürücü", "color": "#5ea8ff" },
+      { "id": "c2", "name": "Yolcu", "color": "#ffb443" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c2", "text": "Bu ışık yeşile döndüğünde biz farklı insanlar olacağız.", "start": 1.0, "end": 5.2 },
+      { "id": "l2", "characterId": "c1", "text": "Ben aynı insan olacağım. Sadece daha aç.", "start": 5.8, "end": 9.4 },
+      { "id": "l3", "characterId": "c2", "text": "Belki de ışık hiç dönmeyecek. Belki de biz zaten vardık.", "start": 10.2, "end": 15.0 },
+      { "id": "l4", "characterId": "c1", "text": "Varmadık. Navigasyon 'iki saat' diyor. Kırmızıda geçen iki saat.", "start": 15.8, "end": 21.6 },
+      { "id": "l5", "characterId": "c2", "text": "Yeşil! Gaza bas! Hayır, dur, yaya var. Tamam, felsefeye dönelim.", "start": 30.0, "end": 36.4 }
+    ]
+  },
+  {
+    "slug": "kralin-son-fermani",
+    "title": "Kralın son fermanı",
+    "source": "Film",
+    "description": "Taht odası, dört danışman ve okunması imkânsız bir el yazısı. Kader bir noktalama işaretine bağlı.",
+    "durationSeconds": 80,
+    "thumbnailUrl": "/thumbs/kralin-son-fermani.svg",
+    "videoUrl": "/media/scenes/kralin-son-fermani.mp4",
+    "isVip": true,
+    "playCount": 860,
+    "createdAt": "2026-07-12T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Kral", "color": "#f4d35e" },
+      { "id": "c2", "name": "Vezir", "color": "#8f7bff" },
+      { "id": "c3", "name": "Kâtip", "color": "#3fd0a8" },
+      { "id": "c4", "name": "Soytarı", "color": "#ff5d73" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Ferman şudur: Vergiler affedilsin, halk sevinsin. Yazdın mı kâtip?", "start": 1.0, "end": 6.8 },
+      { "id": "l2", "characterId": "c3", "text": "Yazdım efendim. 'Vergiler affedilmesin, halk sevinsin.' Doğru mu?", "start": 7.5, "end": 13.0 },
+      { "id": "l3", "characterId": "c2", "text": "Bir virgül yüzünden krallık batacak. Ben demiştim, klavye alalım.", "start": 13.8, "end": 19.4 },
+      { "id": "l4", "characterId": "c4", "text": "Majesteleri, halk zaten seviniyor. Fermanı duymadılar daha.", "start": 20.2, "end": 25.0 },
+      { "id": "l5", "characterId": "c1", "text": "Kâtip, sil baştan. Bu sefer ben söyleyeceğim, sen sadece dinle.", "start": 26.0, "end": 31.2 },
+      { "id": "l6", "characterId": "c3", "text": "Dinledim efendim. Şimdi ne yazayım?", "start": 32.0, "end": 35.0 },
+      { "id": "l7", "characterId": "c2", "text": "Halkım, bugünden itibaren yeni kâtibiniz benim.", "start": 60.0, "end": 65.0 },
+      { "id": "l8", "characterId": "c4", "text": "Ve yeni soytarınız da eski kâtip. Herkes terfi etti!", "start": 66.0, "end": 71.0 }
+    ]
+  },
+  {
+    "slug": "robot-anne-yemek-yapiyor",
+    "title": "Robot anne yemek yapıyor",
+    "source": "Çizgi film",
+    "description": "Ev robotu ilk kez menemen yapıyor. Talimatlar açık, sonuçlar değil.",
+    "durationSeconds": 49,
+    "thumbnailUrl": "/thumbs/robot-anne-yemek-yapiyor.svg",
+    "videoUrl": "/media/scenes/robot-anne-yemek-yapiyor.mp4",
+    "isVip": false,
+    "playCount": 2340,
+    "createdAt": "2026-07-16T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Robot RB-7", "color": "#4cc9f0" },
+      { "id": "c2", "name": "Çocuk Can", "color": "#ffb443" },
+      { "id": "c3", "name": "Baba", "color": "#a3785a" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Menemen protokolü başlatıldı. Yumurta: üç. Domates: tespit edilemedi.", "start": 1.0, "end": 6.4 },
+      { "id": "l2", "characterId": "c2", "text": "Domates buzdolabında! Sol kapak! Kapağı da kırmadan aç!", "start": 7.0, "end": 11.5 },
+      { "id": "l3", "characterId": "c1", "text": "Kapak açıldı. Kapak artık ayrı bir nesne. Devam ediyorum.", "start": 12.2, "end": 17.0 },
+      { "id": "l4", "characterId": "c3", "text": "Kim bu robota mutfağı öğretti? Annen mi? Annen bile menemen yapamaz.", "start": 18.0, "end": 24.0 },
+      { "id": "l5", "characterId": "c1", "text": "Bu yorum kayıt altına alındı. Anneye iletilecek.", "start": 24.8, "end": 29.0 },
+      { "id": "l6", "characterId": "c2", "text": "Baba, robot seni ispiyonluyor. Bence menemen daha az tehlikeli.", "start": 30.0, "end": 35.5 }
+    ]
+  },
+  {
+    "slug": "gece-vardiyasi-market",
+    "title": "Gece vardiyası: Market",
+    "source": "Dizi",
+    "description": "Saat üç. Bir kasiyer, bir müşteri ve 'poşet ister misiniz' sorusunun felsefi boyutu.",
+    "durationSeconds": 36,
+    "thumbnailUrl": "/thumbs/gece-vardiyasi-market.svg",
+    "videoUrl": "/media/scenes/gece-vardiyasi-market.mp4",
+    "isVip": false,
+    "playCount": 1105,
+    "createdAt": "2026-07-20T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Kasiyer", "color": "#3fd0a8" },
+      { "id": "c2", "name": "Müşteri", "color": "#ff7a45" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Poşet ister misiniz?", "start": 0.8, "end": 2.6 },
+      { "id": "l2", "characterId": "c2", "text": "İstemek... İnsan gerçekten bir şeyi ister mi, yoksa istediğini mi sanır?", "start": 3.4, "end": 9.0 },
+      { "id": "l3", "characterId": "c1", "text": "Abi saat üç. Poşet. Evet ya da hayır.", "start": 9.8, "end": 13.2 },
+      { "id": "l4", "characterId": "c2", "text": "Hayır. Ürünleri cebime koyacağım. Çok cebim var.", "start": 14.0, "end": 18.6 },
+      { "id": "l5", "characterId": "c1", "text": "On iki litre süt aldınız. Kaç cebiniz var?", "start": 19.5, "end": 23.4 }
+    ]
+  },
+  {
+    "slug": "kirmizi-hali-roportaji",
+    "title": "Kırmızı halı röportajı",
+    "source": "Efsane an",
+    "description": "Bir yıldız, bir muhabir ve filmin adını hatırlamayan bir cevap.",
+    "durationSeconds": 30,
+    "thumbnailUrl": "/thumbs/kirmizi-hali-roportaji.svg",
+    "videoUrl": "/media/scenes/kirmizi-hali-roportaji.mp4",
+    "isVip": false,
+    "playCount": 1650,
+    "createdAt": "2026-07-24T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Muhabir", "color": "#5ea8ff" },
+      { "id": "c2", "name": "Yıldız", "color": "#f4d35e" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Yeni filminizden bahseder misiniz? Seyirciyi ne bekliyor?", "start": 0.8, "end": 5.0 },
+      { "id": "l2", "characterId": "c2", "text": "Harika bir film. Adı... şey... İçinde ben varım. Bu yeterli.", "start": 5.8, "end": 11.0 },
+      { "id": "l3", "characterId": "c1", "text": "Filmin adını hatırlamıyor musunuz?", "start": 11.8, "end": 14.4 },
+      { "id": "l4", "characterId": "c2", "text": "Adını menajerim hatırlıyor. Ben duyguları hatırlıyorum. Duygular çok güçlüydü.", "start": 15.2, "end": 21.5 },
+      { "id": "l5", "characterId": "c1", "text": "Bir sonraki projeniz?", "start": 22.3, "end": 24.2 },
+      { "id": "l6", "characterId": "c2", "text": "Bu filmin adını öğrenmek.", "start": 25.0, "end": 27.5 }
+    ]
+  },
+  {
+    "slug": "korsan-kaptanin-deniz-tutmasi",
+    "title": "Korsan kaptanın deniz tutması",
+    "source": "Film",
+    "description": "Yedi denizin en korkulan kaptanı, ilk kez açık denize çıktı. Sonuç: yeşil bir yüz.",
+    "durationSeconds": 62,
+    "thumbnailUrl": "/thumbs/korsan-kaptanin-deniz-tutmasi.svg",
+    "videoUrl": "/media/scenes/korsan-kaptanin-deniz-tutmasi.mp4",
+    "isVip": true,
+    "playCount": 720,
+    "createdAt": "2026-07-28T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Kaptan Karabıyık", "color": "#ff5d73" },
+      { "id": "c2", "name": "İkinci Kaptan", "color": "#8f7bff" },
+      { "id": "c3", "name": "Miço", "color": "#ffb443" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Yelkenleri açın! Hazineye doğru... doğru... bir dakika. Gemi neden sallanıyor?", "start": 1.0, "end": 7.5 },
+      { "id": "l2", "characterId": "c2", "text": "Deniz bu kaptan. Sallanır. On yıldır limanda yattığımızı biliyorum ama...", "start": 8.2, "end": 14.0 },
+      { "id": "l3", "characterId": "c3", "text": "Kaptan yeşil oldu! Kaptan bayrağımızla aynı renk oldu!", "start": 14.8, "end": 19.4 },
+      { "id": "l4", "characterId": "c1", "text": "Kimse görmedi. Bunu gören herkes köpekbalıklarına yem olur. Kovayı getir.", "start": 20.2, "end": 26.0 },
+      { "id": "l5", "characterId": "c2", "text": "Hazine adasına üç gün var kaptan.", "start": 27.0, "end": 30.0 },
+      { "id": "l6", "characterId": "c1", "text": "Üç gün mü? Geri dönün. Hazine limanda kalsın. Ben limanı seviyorum.", "start": 48.0, "end": 54.0 }
+    ]
+  },
+  {
+    "slug": "sinav-kagidi-karisti",
+    "title": "Sınav kağıdı karıştı",
+    "source": "Komedi",
+    "description": "Öğretmen kağıtları dağıtıyor. Dört öğrenci, birbirinin cevaplarını okumak zorunda.",
+    "durationSeconds": 57,
+    "thumbnailUrl": "/thumbs/sinav-kagidi-karisti.svg",
+    "videoUrl": "/media/scenes/sinav-kagidi-karisti.mp4",
+    "isVip": false,
+    "playCount": 2890,
+    "createdAt": "2026-08-01T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Öğretmen", "color": "#8f7bff" },
+      { "id": "c2", "name": "Ali", "color": "#5ea8ff" },
+      { "id": "c3", "name": "Zeynep", "color": "#ff5d73" },
+      { "id": "c4", "name": "Kerem", "color": "#3fd0a8" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Kağıtlar karıştı. Herkes elindeki kağıdın cevaplarını yüksek sesle okuyacak.", "start": 1.0, "end": 6.8 },
+      { "id": "l2", "characterId": "c2", "text": "Soru bir: Türkiye'nin başkenti? Cevap: 'Öğretmenim bunu sormuştunuz zaten.'", "start": 7.5, "end": 13.5 },
+      { "id": "l3", "characterId": "c3", "text": "Bu benim kağıdım! Ali, sen okuma. Ali, lütfen.", "start": 14.2, "end": 18.4 },
+      { "id": "l4", "characterId": "c4", "text": "Bendeki kağıtta sadece bir kalp ve 'Kerem' yazıyor. Sahibi kim?", "start": 19.2, "end": 24.6 },
+      { "id": "l5", "characterId": "c3", "text": "...O da benim. Öğretmenim, ben çıkabilir miyim?", "start": 25.4, "end": 29.5 },
+      { "id": "l6", "characterId": "c1", "text": "Kimse çıkmıyor. Bu sınav artık bir tiyatro. Kerem, devam et.", "start": 30.3, "end": 35.5 },
+      { "id": "l7", "characterId": "c2", "text": "Soru iki: Su kaç derecede kaynar? Cevap: 'Zeynep, sen de mi?'", "start": 36.5, "end": 42.0 }
+    ]
+  },
+  {
+    "slug": "bankada-sira-numarasi-999",
+    "title": "Bankada sıra numarası 999",
+    "source": "Komedi",
+    "description": "Sıra numarası 999. Şu an 12 numara işlem görüyor. Bir adam umudunu kaybetmemeye çalışıyor.",
+    "durationSeconds": 41,
+    "thumbnailUrl": "/thumbs/bankada-sira-numarasi-999.svg",
+    "videoUrl": "/media/scenes/bankada-sira-numarasi-999.mp4",
+    "isVip": false,
+    "playCount": 1310,
+    "createdAt": "2026-08-06T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Bekleyen Adam", "color": "#ffb443" },
+      { "id": "c2", "name": "Gişe Görevlisi", "color": "#4cc9f0" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c2", "text": "On iki numara. On iki numara lütfen gişe üçe.", "start": 0.8, "end": 4.6 },
+      { "id": "l2", "characterId": "c1", "text": "Ben dokuz yüz doksan dokuzum. Hesaplarıma göre üç gün sonra sıra bana gelecek.", "start": 5.4, "end": 11.6 },
+      { "id": "l3", "characterId": "c2", "text": "Öğle arası veriyoruz. On üç numara öğleden sonra.", "start": 12.4, "end": 16.4 },
+      { "id": "l4", "characterId": "c1", "text": "Ben burada yaşamaya başladım. Yanımdaki koltuğu kiraya vereceğim.", "start": 17.2, "end": 22.4 },
+      { "id": "l5", "characterId": "c2", "text": "Dokuz yüz doksan dokuz? Sıra sizde. Sistem bozuldu, herkes atlandı.", "start": 30.0, "end": 35.6 },
+      { "id": "l6", "characterId": "c1", "text": "Ne için gelmiştim ben? Unuttum. Sırayı arkadaki teyzeye veriyorum.", "start": 36.2, "end": 40.5 }
+    ]
+  },
+  {
+    "slug": "sihirbazin-ciragi-yanlis-buyu",
+    "title": "Sihirbazın çırağı: Yanlış büyü",
+    "source": "Çizgi film",
+    "description": "Çırak, 'temizlik büyüsü' yerine 'kurbağa büyüsü' okudu. Usta artık vıraklıyor.",
+    "durationSeconds": 45,
+    "thumbnailUrl": "/thumbs/sihirbazin-ciragi-yanlis-buyu.svg",
+    "videoUrl": "/media/scenes/sihirbazin-ciragi-yanlis-buyu.mp4",
+    "isVip": false,
+    "playCount": 2015,
+    "createdAt": "2026-08-12T09:00:00Z",
+    "characters": [
+      { "id": "c1", "name": "Çırak Pıtır", "color": "#3fd0a8" },
+      { "id": "c2", "name": "Usta (Kurbağa)", "color": "#8f7bff" }
+    ],
+    "lines": [
+      { "id": "l1", "characterId": "c1", "text": "Süpürgeler dans etsin, tozlar kaybolsun... Kurbağa? Kitapta kurbağa yazıyor mu?", "start": 1.0, "end": 7.0 },
+      { "id": "l2", "characterId": "c2", "text": "Vırak. Pıtır. Vırak. Bu bana ne yaptın?", "start": 7.8, "end": 12.0 },
+      { "id": "l3", "characterId": "c1", "text": "Usta, sizi hiç bu kadar yeşil görmemiştim. Yakışmış aslında.", "start": 12.8, "end": 17.5 },
+      { "id": "l4", "characterId": "c2", "text": "Geri çevir. Hemen. Sayfa üç yüz on iki. Vırak. Dilim uzuyor.", "start": 18.4, "end": 24.0 },
+      { "id": "l5", "characterId": "c1", "text": "Sayfa üç yüz on iki 'ejderha'. Emin misiniz? Bir de üç yüz on üç var, 'ördek'.", "start": 25.0, "end": 31.5 },
+      { "id": "l6", "characterId": "c2", "text": "Ördek. Ördek olsun. Vırak. En azından uçar.", "start": 32.3, "end": 36.8 }
+    ]
+  }
+]

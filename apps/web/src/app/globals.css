@@ -1,0 +1,226 @@
+/* Katman sırası: kngl (bileşen sınıfları) utilities'den ÖNCE gelir; böylece md:hidden gibi yardımcılar her zaman üstün olur. */
+@layer theme, base, kngl, components, utilities;
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   KNGL Dublaj tasarım belirteçleri
+   Açık, sıcak "kağıt" zemin; mandalina birincil, lacivert ikincil vurgu.
+   Oyun/kayıt ekranı `.theme-studio` sarmalayıcısıyla koyu stüdyo temasına geçer.
+------------------------------------------------------------------- */
+@theme {
+  --color-ink: #17181f;
+  --color-ink-soft: #5b6070;
+  --color-ink-faint: #8b8f9c;
+  --color-bg: #f7f3ec;
+  --color-bg-alt: #efe9dd;
+  --color-surface: #fffdf9;
+  --color-surface-2: #f2ede3;
+  --color-line: #e4ddd0;
+  --color-line-strong: #cfc6b4;
+  --color-primary: #e8541e;
+  --color-primary-deep: #c2410c;
+  --color-primary-soft: #fde7dc;
+  --color-accent: #23305c;
+  --color-accent-deep: #17203f;
+  --color-accent-soft: #e2e6f4;
+  --color-rec: #e11d48;
+  --color-green: #15803d;
+  --color-blue: #1d4ed8;
+
+  --font-display: var(--font-display), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius-card: 22px;
+  --shadow-card: 0 24px 50px -30px rgb(23 24 31 / 0.35);
+  --shadow-pop: 0 10px 30px -10px rgb(232 84 30 / 0.45);
+
+  --animate-pulse-rec: pulse-rec 1.4s ease-in-out infinite;
+  --animate-wave: wave 1.2s ease-in-out infinite;
+  --animate-rise: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-ticker: ticker 40s linear infinite;
+}
+
+@keyframes pulse-rec {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(225 29 72 / 0.5); }
+  50% { box-shadow: 0 0 0 10px rgb(225 29 72 / 0); }
+}
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Koyu stüdyo: oda ve kayıt ekranı. Aynı belirteç adları, farklı değerler. */
+.theme-studio {
+  --color-ink: #f2f2f5;
+  --color-ink-soft: #a5a9b8;
+  --color-ink-faint: #6e7385;
+  --color-bg: #0f1117;
+  --color-bg-alt: #141721;
+  --color-surface: #191d29;
+  --color-surface-2: #222736;
+  --color-line: #2b3142;
+  --color-line-strong: #3d4560;
+  --color-primary: #ff7a3d;
+  --color-primary-deep: #e8541e;
+  --color-primary-soft: #3a2418;
+  --color-accent: #9aa8ff;
+  --color-accent-soft: #232a4a;
+  --shadow-card: 0 24px 60px -30px rgb(0 0 0 / 0.8);
+  color-scheme: dark;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(232 84 30 / 0.25);
+}
+
+/* Kağıt dokusu: çok hafif noktalı desen. */
+.bg-paper {
+  background-image: radial-gradient(rgb(23 24 31 / 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, #e8541e 0%, #f0803c 55%, #23305c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Bileşen sınıfları kendi katmanında (Tailwind v4, `components` adını katmansız çıkarır). */
+@layer kngl {
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 select-none;
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--color-primary-deep);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-pop);
+  }
+  .btn-dark {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .btn-dark:hover {
+    background: var(--color-accent-deep);
+    transform: translateY(-1px);
+  }
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    border: 1px solid var(--color-line-strong);
+  }
+  .btn-secondary:hover {
+    background: var(--color-surface-2);
+  }
+  .btn-ghost {
+    color: var(--color-ink-soft);
+  }
+  .btn-ghost:hover {
+    color: var(--color-ink);
+    background: rgb(23 24 31 / 0.05);
+  }
+  .theme-studio .btn-ghost:hover {
+    background: rgb(255 255 255 / 0.06);
+  }
+  .btn-rec {
+    background: var(--color-rec);
+    color: #fff;
+  }
+  .btn-rec:hover {
+    background: #be123c;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .input {
+    @apply w-full rounded-xl px-4 py-3 text-base outline-none transition;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-ink);
+  }
+  .input::placeholder {
+    color: var(--color-ink-faint);
+  }
+  .input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgb(232 84 30 / 0.15);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
+    color: var(--color-ink-soft);
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.18em] uppercase;
+    color: var(--color-primary);
+  }
+
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  /* Sahne afişi çerçevesi: hafif eğik "film karesi" hissi. */
+  .poster-frame {
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-surface-2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
