@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import { BRAND } from "@kngl/shared";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -7,8 +7,23 @@ import { getIdentity } from "@/lib/auth";
 import { env } from "@/lib/env";
 import "./globals.css";
 
-const sans = Manrope({ subsets: ["latin", "latin-ext"], variable: "--font-sans", display: "swap" });
-const display = Bricolage_Grotesque({ subsets: ["latin", "latin-ext"], variable: "--font-display", display: "swap" });
+/* Yazı tipleri repoya gömülü (OFL lisanslı): derleme sırasında internet gerekmez. */
+const sans = localFont({
+  src: [
+    { path: "../fonts/manrope-latin.woff2", weight: "200 800", style: "normal" },
+    { path: "../fonts/manrope-latin-ext.woff2", weight: "200 800", style: "normal" },
+  ],
+  variable: "--font-sans",
+  display: "swap",
+});
+const display = localFont({
+  src: [
+    { path: "../fonts/bricolage-latin.woff2", weight: "200 800", style: "normal" },
+    { path: "../fonts/bricolage-latin-ext.woff2", weight: "200 800", style: "normal" },
+  ],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(env().NEXT_PUBLIC_SITE_URL),

@@ -17,7 +17,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Docker imajında (NEXT_STANDALONE=1) küçük standalone çıktı; Railpack/Nixpacks gibi
+  // "npm start" ile başlatan platformlarda klasik `next start`.
+  output: process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined,
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
