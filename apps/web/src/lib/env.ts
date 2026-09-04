@@ -25,16 +25,30 @@ const schema = z.object({
 export type Env = z.infer<typeof schema>;
 
 let cached: Env | null = null;
+
+/**
+ * Boş string = tanımsız. Docker/Coolify gibi platformlar tanımlanmamış build-arg'ları "" olarak geçer;
+ * bunlar varsayılana düşmeli, doğrulamayı düşürmemeli.
+ */
+function readRawEnv(): Record<string, string | undefined> {
+  const out: Record<string, string | undefined> = {};
+  for (const [k, v] of Object.entries(process.env)) out[k] = v === "" ? undefined : v;
+  return out;
+}
+
 export function env(): Env {
   if (cached) return cached;
-  const parsed = schema.safeParse(process.env);
+  const isBuild = process.env.NEXT_PHASE === "phase-production-build";
+  const parsed = schema.safeParse(readRawEnv());
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("\n");
-    throw new Error(`Geçersiz ortam değişkenleri:\n${issues}`);
+    if (!isBuild) throw new Error(`Geçersiz ortam değişkenleri:\n${issues}`);
+    // `next build` sırasında gerçek değerler gerekmez (veri çekilmez); varsayılanlarla devam et.
+    console.warn(`[env] derleme sırasında geçersiz değerler yok sayıldı:\n${issues}`);
+    cached = schema.parse({});
+    return cached;
   }
-  // `next build` sırasında (NEXT_PHASE=phase-production-build) gizli anahtar gerekmez;
-  // üretimde sunucu ayağa kalkarken zorunlu.
-  const isBuild = process.env.NEXT_PHASE === "phase-production-build";
+  // Üretimde sunucu ayağa kalkarken gizli anahtar zorunlu; derleme sırasında değil.
   if (!isBuild && parsed.data.NODE_ENV === "production" && parsed.data.SESSION_SECRET.startsWith("dev-only")) {
     throw new Error("SESSION_SECRET üretimde mutlaka ayarlanmalı.");
   }
