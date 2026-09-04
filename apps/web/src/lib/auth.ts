@@ -1,6 +1,6 @@
 import "server-only";
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import bcrypt from "bcryptjs";
 import { LIMITS, keys } from "@kngl/shared";
 import { env } from "./env";
@@ -54,10 +54,22 @@ export function decodeIdentityToken(token: string | undefined): Identity | null 
   }
 }
 
-const cookieBase = () => ({
+/**
+ * `Secure` bayrağı isteğin gerçek protokolüne göre: proxy arkasında X-Forwarded-Proto,
+ * yoksa site adresi. HTTP üzerinden gelen bir ziyaretçiye Secure çerez verilirse tarayıcı
+ * çerezi kaydetmez ve kullanıcı sürekli takma ad ekranına döner.
+ */
+async function isHttps(): Promise<boolean> {
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto");
+  if (proto) return proto.split(",")[0].trim() === "https";
+  return env().NEXT_PUBLIC_SITE_URL.startsWith("https://");
+}
+
+const cookieBase = async () => ({
   httpOnly: true,
   sameSite: "lax" as const,
-  secure: env().NODE_ENV === "production",
+  secure: await isHttps(),
   path: "/",
 });
 
@@ -97,7 +109,7 @@ export async function setGuestIdentity(nickname: string): Promise<Identity> {
     isGuest: true,
     isVip: false,
   };
-  jar.set(GUEST_COOKIE, encodeIdentityToken(identity), { ...cookieBase(), maxAge: GUEST_TTL });
+  jar.set(GUEST_COOKIE, encodeIdentityToken(identity), { ...(await cookieBase()), maxAge: GUEST_TTL });
   return identity;
 }
 
@@ -119,7 +131,7 @@ async function createSession(identity: Identity) {
   const sid = randomBytes(32).toString("base64url");
   await redis().set(keys.session(sid), JSON.stringify(identity), "EX", SESSION_TTL);
   const jar = await cookies();
-  jar.set(SESSION_COOKIE, sid, { ...cookieBase(), maxAge: SESSION_TTL });
+  jar.set(SESSION_COOKIE, sid, { ...(await cookieBase()), maxAge: SESSION_TTL });
   jar.delete(GUEST_COOKIE);
 }
 
@@ -156,4 +168,44 @@ export async function logout(): Promise<void> {
   const sid = jar.get(SESSION_COOKIE)?.value;
   if (sid) await redis().del(keys.session(sid)).catch(() => {});
   jar.delete(SESSION_COOKIE);
+}
+
+/* ------------------------------------------------------------------ */
+/* Yönetim paneli oturumu                                              */
+/* ------------------------------------------------------------------ */
+const ADMIN_COOKIE = "kngl_admin";
+const ADMIN_TTL = 12 * 60 * 60; // 12 saat
+
+export function isAdminEnabled(): boolean {
+  return Boolean(env().ADMIN_PASSWORD && env().ADMIN_PASSWORD!.length >= 8);
+}
+
+export async function adminLogin(password: string): Promise<boolean> {
+  const expected = env().ADMIN_PASSWORD;
+  if (!isAdminEnabled() || !expected) return false;
+  const a = Buffer.from(password);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return false;
+  const payload = Buffer.from(JSON.stringify({ admin: true, exp: Date.now() + ADMIN_TTL * 1000 })).toString("base64url");
+  const jar = await cookies();
+  jar.set(ADMIN_COOKIE, `${payload}.${sign(payload)}`, { ...(await cookieBase()), maxAge: ADMIN_TTL });
+  return true;
+}
+
+export async function adminLogout(): Promise<void> {
+  (await cookies()).delete(ADMIN_COOKIE);
+}
+
+export async function isAdmin(): Promise<boolean> {
+  if (!isAdminEnabled()) return false;
+  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+  if (!token) return false;
+  const [payload, sig] = token.split(".");
+  if (!payload || !sig || !verify(payload, sig)) return false;
+  try {
+    const data = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { admin?: boolean; exp?: number };
+    return data.admin === true && typeof data.exp === "number" && data.exp > Date.now();
+  } catch {
+    return false;
+  }
 }

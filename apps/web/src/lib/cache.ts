@@ -75,6 +75,22 @@ export async function cached<T>(name: string, opts: CacheOptions, producer: () =
   }
 }
 
+/** Verilen ön ekle başlayan tüm önbellek anahtarlarını (yerel + Redis) temizler. Yönetim panelindeki değişikliklerden sonra kullanılır. */
+export async function invalidatePrefix(prefix: string) {
+  const full = keys.cache(prefix);
+  for (const k of Array.from(local.keys())) if (k.startsWith(full)) local.delete(k);
+  try {
+    let cursor = "0";
+    do {
+      const [next, found] = await redis().scan(cursor, "MATCH", `${full}*`, "COUNT", 200);
+      cursor = next;
+      if (found.length) await redis().del(...found);
+    } while (cursor !== "0");
+  } catch (err) {
+    console.warn("[cache] invalidatePrefix failed", (err as Error).message);
+  }
+}
+
 export async function invalidate(...names: string[]) {
   for (const n of names) local.delete(keys.cache(n));
   try {

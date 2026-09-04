@@ -17,6 +17,10 @@ const schema = z.object({
   UPLOAD_DIR: z.string().default("./data/uploads"),
   /** Üretilen videoların dışarıya servis edildiği taban adres. */
   MEDIA_BASE_URL: z.string().default("/media"),
+  /** Sahne videoları (scenes/), afişler (thumbs/) ve final videolar (dubs/) için kök dizin. */
+  MEDIA_DIR: z.string().default("./data/media"),
+  /** Yönetim paneli şifresi. Boşsa panel kapalıdır. */
+  ADMIN_PASSWORD: z.string().optional(),
   /** Postgres bağlantı havuzu: her web replikası için üst sınır. */
   PG_POOL_MAX: z.coerce.number().int().min(1).max(100).default(10),
   DISCORD_INVITE_URL: z.string().default("https://discord.gg/kngl"),
