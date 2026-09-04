@@ -73,40 +73,29 @@ Video olmadan da oyun akışı çalışır: kayıt bileşeni süre tabanlı geri
 ## Üretim
 
 ```bash
-cp .env.example .env && $EDITOR .env      # SESSION_SECRET ve NEXT_PUBLIC_SITE_URL zorunlu
+cp .env.example .env && $EDITOR .env      # SERVICE_PASSWORD_64_SESSION, SERVICE_PASSWORD_POSTGRES, SERVICE_URL_NGINX
 docker compose up -d --build
-docker compose up -d --scale web=4 --scale realtime=2 --scale worker=3   # ölçekle
 ```
 
-Compose dosyaları host portu bağlamaz (`expose: 80`); önündeki proxy (Coolify, Traefik, Caddy) nginx'e yönlendirir. Proxy'siz bir sunucuda
-`cp docker-compose.override.example.yml docker-compose.override.yml` ile 80 portunu dışarı açabilirsin.
+Compose dosyası host portu bağlamaz (`expose: 80`); önündeki proxy (Coolify, Traefik, Caddy) nginx'e yönlendirir. Proxy'siz bir sunucuda
+`cp docker-compose.override.example.yml docker-compose.override.yml` ile 80 portunu dışarı açabilirsin. TLS'i proxy sonlandırır;
+`X-Forwarded-Proto` iletilir.
 
-TLS: nginx'in önüne Caddy/Traefik ya da bulut yük dengeleyici koy; `X-Forwarded-Proto` iletilir.
+Ölçekleme: uygulama durumsuzdur; web/realtime/worker kopyalarını Swarm, Kubernetes ya da ayrı sunucularda çoğaltabilirsin.
+Compose dosyasında bilinçli olarak `deploy.replicas` yoktur: Coolify konteyner adlarını kendisi verir ve replika ile çakışır.
 
-### Coolify ile dağıtım
+### Coolify ile dağıtım (önerilen yol)
 
-**Seçenek A — Docker Compose (tam oyun, önerilen).** Web, realtime, worker, Postgres ve Redis tek seferde kurulur.
+1. Coolify → **New Resource → Docker Compose**, depo `AI-Slop-Tech/yayinicerik`, dal `main`, dosya yolu `/docker-compose.yml`.
+2. Servisler listelendiğinde yalnızca **nginx** servisine alan adını tanımla (ör. `https://kngldublaj.com`).
+3. Deploy. `SESSION_SECRET`, Postgres şifresi ve site adresi Coolify'ın magic değişkenleriyle otomatik üretilir; elle değer girmek gerekmez.
+   İlk derleme dört imaj ürettiği için 5–10 dakika sürebilir; `migrate` servisi şemayı ve örnek kataloğu bir kez yükleyip biter.
+4. Sahne videolarını `media` volume'una `scenes/<slug>.mp4` yoluyla kopyala.
 
-1. Coolify → **New Resource → Docker Compose**, depo: `AI-Slop-Tech/yayinicerik`, dal: `main`.
-2. **Docker Compose Location** alanına `/docker-compose.coolify.yml` yaz. Bu dosya host portu bağlamaz (Coolify'ın proxy'siyle çakışmaz)
-   ve gizli değerleri (`SESSION_SECRET`, Postgres şifresi) Coolify'ın magic değişkenleriyle otomatik üretir.
-3. `nginx` servisine alan adını tanımla (ör. `https://kngldublaj.com`). `SERVICE_URL_NGINX` bu değerden dolar.
-4. Deploy. İlk derleme 4 imaj (nginx, web, realtime, worker) ürettiği için 5–10 dakika sürebilir; `migrate` servisi şemayı ve
-   örnek kataloğu bir kez yükleyip biter.
-5. Sahne videolarını `media` volume'una, `scenes/<slug>.mp4` yoluyla kopyala.
-
-**Seçenek B — Railpack / Nixpacks (yalnızca web).** Coolify'ın varsayılan "Application" kaynağı depoyu tek Node uygulaması olarak
-derler; kökteki `npm run build` ve `npm start` bunun için hazırdır (port 3000). Ancak bu yolda Postgres, Redis, realtime ve worker
-ayrı ayrı kurulmalıdır:
-
-1. Coolify'da bir **PostgreSQL** ve bir **Redis** kaynağı oluşturun.
-2. Web uygulamasına şu ortam değişkenlerini verin: `SESSION_SECRET` (≥32 karakter), `DATABASE_URL`, `REDIS_URL`, `NEXT_PUBLIC_SITE_URL`,
-   `NEXT_PUBLIC_REALTIME_URL` (realtime uygulamasının adresi).
-3. Şemayı bir kez yükleyin: `DATABASE_URL=... npm run db:migrate && npm run db:seed`.
-4. Realtime için ikinci bir Application açın (start: `npm run start -w @kngl/realtime`, port 4000, aynı `SESSION_SECRET`);
-   worker için üçüncüsü (start: `npm run start -w @kngl/worker`, imajda ffmpeg gerekir).
-
-Bu yolda web tek başına açılır ve `/durum` sayfası hangi bağımlılığın eksik olduğunu gösterir; oyun akışı realtime + worker olmadan tamamlanmaz.
+**Alternatif: Railpack / Nixpacks (yalnızca web).** Coolify'ın varsayılan "Application" kaynağı depoyu tek Node uygulaması olarak
+derler; kökteki `npm run build` ve `npm start` bunun için hazırdır (port 3000). Bu yolda Postgres, Redis, realtime ve worker ayrı
+kaynak olarak kurulmalı ve web'e `SESSION_SECRET`, `DATABASE_URL`, `REDIS_URL`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_REALTIME_URL`
+verilmelidir. Web tek başına açılır; `/durum` sayfası eksik bağımlılığı gösterir, oyun akışı realtime + worker olmadan tamamlanmaz.
 
 Yazı tipleri repoya gömülüdür (`apps/web/src/fonts`), derleme sırasında internet gerekmez.
 

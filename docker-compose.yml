@@ -1,21 +1,21 @@
-# KNGL Dublaj — üretim topolojisi
-#   nginx (kenar) → web ×N (Next.js, durumsuz) → postgres / redis
-#                 → realtime ×M (Socket.IO, Redis adapter)
-#   worker ×K (BullMQ + ffmpeg)  ← redis kuyruğu
-# Ölçekleme: docker compose up -d --scale web=4 --scale realtime=2 --scale worker=3
-name: kngl-dublaj
-
-x-common-env: &common-env
-  NODE_ENV: production
-  SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET ayarlanmalı}
-  DATABASE_URL: postgres://${POSTGRES_USER:-kngl}:${POSTGRES_PASSWORD:-kngl}@postgres:5432/${POSTGRES_DB:-kngl}
-  REDIS_URL: redis://redis:6379
+# KNGL Dublaj — üretim topolojisi (Coolify ile birebir uyumlu; düz `docker compose` ile de çalışır)
+#   nginx (kenar) → web (Next.js) → postgres / redis
+#                 → realtime (Socket.IO, Redis adapter)
+#   worker (BullMQ + ffmpeg) ← redis kuyruğu
+#
+# Coolify: New Resource → Docker Compose, dosya yolu /docker-compose.yml, alan adını yalnızca nginx servisine verin.
+#   SERVICE_PASSWORD_64_SESSION, SERVICE_PASSWORD_POSTGRES ve SERVICE_URL_NGINX değerlerini Coolify kendisi üretir.
+# Coolify dışı: aynı üç değişkeni .env dosyasına yazın (bkz. .env.example); proxy'siz sunucuda
+#   docker-compose.override.example.yml ile 80 portunu açın.
+#
+# Bilinçli olarak yok: `deploy.replicas`, `container_name`, `ports`. Coolify konteyner adlarını kendisi verir ve
+# replika ile çakışır; portu önündeki proxy yönetir. Yatay ölçekleme için Swarm/Kubernetes ya da ayrı sunucular.
 
 services:
   nginx:
     build: ./infra/nginx
-    # Host portu bağlanmaz; önündeki proxy (Coolify/Traefik/Caddy) nginx:80'e yönlendirir.
-    # Proxy'siz kullanım için docker-compose.override.yml içinde `ports: ["80:80"]` ekleyin (örnek dosya repoda).
+    environment:
+      - SERVICE_FQDN_NGINX_80
     expose:
       - "80"
     volumes:
@@ -26,21 +26,22 @@ services:
       realtime:
         condition: service_healthy
     restart: unless-stopped
-    ulimits:
-      nofile: { soft: 65535, hard: 65535 }
 
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
     environment:
-      <<: *common-env
-      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
-      NEXT_PUBLIC_REALTIME_URL: ""
-      UPLOAD_DIR: /data/uploads
-      MEDIA_BASE_URL: /media
-      PG_POOL_MAX: ${PG_POOL_MAX:-10}
-      DISCORD_INVITE_URL: ${DISCORD_INVITE_URL:-https://discord.gg/kngl}
+      - NODE_ENV=production
+      - SESSION_SECRET=${SERVICE_PASSWORD_64_SESSION}
+      - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
+      - REDIS_URL=redis://redis:6379
+      - NEXT_PUBLIC_SITE_URL=${SERVICE_URL_NGINX}
+      - NEXT_PUBLIC_REALTIME_URL=
+      - UPLOAD_DIR=/data/uploads
+      - MEDIA_BASE_URL=/media
+      - PG_POOL_MAX=${PG_POOL_MAX:-10}
+      - DISCORD_INVITE_URL=${DISCORD_INVITE_URL:-https://discord.gg/kngl}
     volumes:
       - uploads:/data/uploads
     depends_on:
@@ -50,10 +51,6 @@ services:
         condition: service_healthy
       migrate:
         condition: service_completed_successfully
-    deploy:
-      replicas: 2
-      resources:
-        limits: { memory: 768M }
     restart: unless-stopped
 
   realtime:
@@ -61,18 +58,17 @@ services:
       context: .
       dockerfile: apps/realtime/Dockerfile
     environment:
-      <<: *common-env
-      PORT: 4000
-      CORS_ORIGINS: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
+      - NODE_ENV=production
+      - PORT=4000
+      - SESSION_SECRET=${SERVICE_PASSWORD_64_SESSION}
+      - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
+      - REDIS_URL=redis://redis:6379
+      - CORS_ORIGINS=${SERVICE_URL_NGINX}
     depends_on:
-      redis:
-        condition: service_healthy
       postgres:
         condition: service_healthy
-    deploy:
-      replicas: 2
-      resources:
-        limits: { memory: 512M }
+      redis:
+        condition: service_healthy
     restart: unless-stopped
 
   worker:
@@ -80,25 +76,23 @@ services:
       context: .
       dockerfile: apps/worker/Dockerfile
     environment:
-      <<: *common-env
-      UPLOAD_DIR: /data/uploads
-      SCENE_MEDIA_DIR: /data/media/scenes
-      OUTPUT_DIR: /data/media/dubs
-      MEDIA_BASE_URL: /media
-      RENDER_CONCURRENCY: ${RENDER_CONCURRENCY:-2}
-      WATERMARK_TEXT: ${WATERMARK_TEXT:-KNGL Dublaj}
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
+      - REDIS_URL=redis://redis:6379
+      - UPLOAD_DIR=/data/uploads
+      - SCENE_MEDIA_DIR=/data/media/scenes
+      - OUTPUT_DIR=/data/media/dubs
+      - MEDIA_BASE_URL=/media
+      - RENDER_CONCURRENCY=${RENDER_CONCURRENCY:-2}
+      - WATERMARK_TEXT=${WATERMARK_TEXT:-KNGL Dublaj}
     volumes:
       - uploads:/data/uploads
       - media:/data/media
     depends_on:
-      redis:
-        condition: service_healthy
       postgres:
         condition: service_healthy
-    deploy:
-      replicas: 2
-      resources:
-        limits: { cpus: "2", memory: 1G }
+      redis:
+        condition: service_healthy
     restart: unless-stopped
 
   migrate:
@@ -108,7 +102,7 @@ services:
       target: build
     command: sh -c "node scripts/migrate.mjs && node scripts/seed.mjs"
     environment:
-      <<: *common-env
+      - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
     depends_on:
       postgres:
         condition: service_healthy
@@ -117,16 +111,16 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-kngl}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kngl}
-      POSTGRES_DB: ${POSTGRES_DB:-kngl}
+      - POSTGRES_USER=kngl
+      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
+      - POSTGRES_DB=kngl
     command: >
       postgres -c max_connections=200 -c shared_buffers=256MB -c effective_cache_size=768MB
                -c work_mem=8MB -c maintenance_work_mem=64MB -c wal_compression=on
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kngl} -d ${POSTGRES_DB:-kngl}"]
+      test: ["CMD-SHELL", "pg_isready -U kngl -d kngl"]
       interval: 5s
       timeout: 3s
       retries: 20
@@ -134,7 +128,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    # Odalar ve önbellek geçici veridir; bellek dolarsa en az kullanılan önbellek anahtarları atılır.
     command: redis-server --maxmemory 512mb --maxmemory-policy volatile-lru --save "" --appendonly no
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
