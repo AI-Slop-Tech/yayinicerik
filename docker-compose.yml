@@ -15,7 +15,7 @@ services:
   nginx:
     build: ./infra/nginx
     ports:
-      - "80:80"
+      - "${HTTP_PORT:-80}:80"   # Coolify/Traefik olan sunucuda HTTP_PORT=8080 gibi bir değer verin
     volumes:
       - media:/srv/media:ro
     depends_on:

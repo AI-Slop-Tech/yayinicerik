@@ -80,6 +80,18 @@ docker compose up -d --scale web=4 --scale realtime=2 --scale worker=3   # ölç
 
 TLS: nginx'in önüne Caddy/Traefik ya da bulut yük dengeleyici koy; `X-Forwarded-Proto` iletilir.
 
+### Coolify ile dağıtım
+
+1. Coolify → **New Resource → Docker Compose**, depo: `AI-Slop-Tech/yayinicerik`, dal: `main`.
+2. **Docker Compose Location** alanına `/docker-compose.coolify.yml` yaz. Bu dosya host portu bağlamaz (Coolify'ın proxy'siyle çakışmaz)
+   ve gizli değerleri (`SESSION_SECRET`, Postgres şifresi) Coolify'ın magic değişkenleriyle otomatik üretir.
+3. `nginx` servisine alan adını tanımla (ör. `https://kngldublaj.com`). `SERVICE_URL_NGINX` bu değerden dolar.
+4. Deploy. İlk derleme 4 imaj (nginx, web, realtime, worker) ürettiği için 5–10 dakika sürebilir; `migrate` servisi şemayı ve
+   örnek kataloğu bir kez yükleyip biter.
+5. Sahne videolarını `media` volume'una, `scenes/<slug>.mp4` yoluyla kopyala.
+
+Yazı tipleri repoya gömülüdür (`apps/web/src/fonts`), derleme sırasında internet gerekmez.
+
 ## Komutlar
 
 | Komut | Açıklama |
