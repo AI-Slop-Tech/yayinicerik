@@ -6,7 +6,8 @@ COPY packages/shared/package.json packages/shared/
 COPY apps/web/package.json apps/web/
 COPY apps/realtime/package.json apps/realtime/
 COPY apps/worker/package.json apps/worker/
-RUN npm ci --no-audit --no-fund
+# --ignore-scripts: postinstall (shared derlemesi) bu aşamada kaynak olmadığı için çalışmamalı; build aşamasında derlenir.
+RUN npm ci --no-audit --no-fund --ignore-scripts
 
 # ---- derleme ----
 FROM node:22-alpine AS build
