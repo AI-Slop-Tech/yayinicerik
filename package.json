@@ -1,0 +1,30 @@
+{
+  "name": "kngl-dublaj",
+  "version": "1.0.0",
+  "private": true,
+  "description": "KNGL Dublaj — arkadaşlarınla sahne seslendirme oyunu. Ölçeklenebilir web + realtime + render altyapısı.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:web": "npm run dev -w @kngl/web",
+    "dev:realtime": "npm run dev -w @kngl/realtime",
+    "dev:worker": "npm run dev -w @kngl/worker",
+    "build": "npm run build -w @kngl/shared && npm run build -w @kngl/realtime && npm run build -w @kngl/worker && npm run build -w @kngl/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:seed": "node scripts/seed.mjs"
+  },
+  "devDependencies": {
+    "ioredis": "5.8.2",
+    "pg": "8.20.0",
+    "socket.io-client": "4.8.3"
+  }
+}
