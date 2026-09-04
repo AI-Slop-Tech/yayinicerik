@@ -78,6 +78,9 @@ docker compose up -d --build
 docker compose up -d --scale web=4 --scale realtime=2 --scale worker=3   # ölçekle
 ```
 
+Compose dosyaları host portu bağlamaz (`expose: 80`); önündeki proxy (Coolify, Traefik, Caddy) nginx'e yönlendirir. Proxy'siz bir sunucuda
+`cp docker-compose.override.example.yml docker-compose.override.yml` ile 80 portunu dışarı açabilirsin.
+
 TLS: nginx'in önüne Caddy/Traefik ya da bulut yük dengeleyici koy; `X-Forwarded-Proto` iletilir.
 
 ### Coolify ile dağıtım

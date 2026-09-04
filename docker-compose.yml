@@ -14,8 +14,10 @@ x-common-env: &common-env
 services:
   nginx:
     build: ./infra/nginx
-    ports:
-      - "${HTTP_PORT:-80}:80"   # Coolify/Traefik olan sunucuda HTTP_PORT=8080 gibi bir değer verin
+    # Host portu bağlanmaz; önündeki proxy (Coolify/Traefik/Caddy) nginx:80'e yönlendirir.
+    # Proxy'siz kullanım için docker-compose.override.yml içinde `ports: ["80:80"]` ekleyin (örnek dosya repoda).
+    expose:
+      - "80"
     volumes:
       - media:/srv/media:ro
     depends_on:
