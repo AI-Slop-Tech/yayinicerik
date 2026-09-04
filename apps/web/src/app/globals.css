@@ -4,49 +4,46 @@
 
 /* ------------------------------------------------------------------
    KNGL Dublaj tasarım belirteçleri
-   Koyu, stüdyo hissi veren zemin; amber birincil, menekşe ikincil vurgu;
-   kırmızı yalnızca "kayıt" durumları için.
+   Açık, sıcak "kağıt" zemin; mandalina birincil, lacivert ikincil vurgu.
+   Oyun/kayıt ekranı `.theme-studio` sarmalayıcısıyla koyu stüdyo temasına geçer.
 ------------------------------------------------------------------- */
 @theme {
-  --color-ink: #f4f5f9;
-  --color-ink-soft: #a3a9ba;
-  --color-ink-faint: #6b7286;
-  --color-bg: #090b11;
-  --color-bg-alt: #0d1018;
-  --color-surface: #121622;
-  --color-surface-2: #1a1f2d;
-  --color-line: #232a3b;
-  --color-line-strong: #34405a;
-  --color-primary: #ffb443;
-  --color-primary-deep: #e0931a;
-  --color-accent: #8f7bff;
-  --color-accent-deep: #6a54e6;
-  --color-rec: #ff4d4d;
-  --color-rec-deep: #c72424;
-  --color-green: #3fd0a8;
-  --color-blue: #5ea8ff;
+  --color-ink: #17181f;
+  --color-ink-soft: #5b6070;
+  --color-ink-faint: #8b8f9c;
+  --color-bg: #f7f3ec;
+  --color-bg-alt: #efe9dd;
+  --color-surface: #fffdf9;
+  --color-surface-2: #f2ede3;
+  --color-line: #e4ddd0;
+  --color-line-strong: #cfc6b4;
+  --color-primary: #e8541e;
+  --color-primary-deep: #c2410c;
+  --color-primary-soft: #fde7dc;
+  --color-accent: #23305c;
+  --color-accent-deep: #17203f;
+  --color-accent-soft: #e2e6f4;
+  --color-rec: #e11d48;
+  --color-green: #15803d;
+  --color-blue: #1d4ed8;
 
   --font-display: var(--font-display), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  --radius-card: 18px;
-  --shadow-card: 0 20px 60px -30px rgb(0 0 0 / 0.8);
-  --shadow-glow: 0 0 0 1px rgb(255 180 67 / 0.25), 0 12px 40px -12px rgb(255 180 67 / 0.45);
+  --radius-card: 22px;
+  --shadow-card: 0 24px 50px -30px rgb(23 24 31 / 0.35);
+  --shadow-pop: 0 10px 30px -10px rgb(232 84 30 / 0.45);
 
-  --animate-marquee: marquee 28s linear infinite;
   --animate-pulse-rec: pulse-rec 1.4s ease-in-out infinite;
   --animate-wave: wave 1.2s ease-in-out infinite;
   --animate-rise: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-ticker: ticker 40s linear infinite;
 }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
 @keyframes pulse-rec {
-  0%, 100% { box-shadow: 0 0 0 0 rgb(255 77 77 / 0.55); }
-  50% { box-shadow: 0 0 0 10px rgb(255 77 77 / 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgb(225 29 72 / 0.5); }
+  50% { box-shadow: 0 0 0 10px rgb(225 29 72 / 0); }
 }
 @keyframes wave {
   0%, 100% { transform: scaleY(0.35); }
@@ -56,9 +53,35 @@
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Koyu stüdyo: oda ve kayıt ekranı. Aynı belirteç adları, farklı değerler. */
+.theme-studio {
+  --color-ink: #f2f2f5;
+  --color-ink-soft: #a5a9b8;
+  --color-ink-faint: #6e7385;
+  --color-bg: #0f1117;
+  --color-bg-alt: #141721;
+  --color-surface: #191d29;
+  --color-surface-2: #222736;
+  --color-line: #2b3142;
+  --color-line-strong: #3d4560;
+  --color-primary: #ff7a3d;
+  --color-primary-deep: #e8541e;
+  --color-primary-soft: #3a2418;
+  --color-accent: #9aa8ff;
+  --color-accent-soft: #232a4a;
+  --shadow-card: 0 24px 60px -30px rgb(0 0 0 / 0.8);
+  color-scheme: dark;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html {
@@ -70,26 +93,23 @@ body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  font-feature-settings: "ss01", "cv11";
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgb(255 180 67 / 0.35);
+  background: rgb(232 84 30 / 0.25);
 }
 
-/* Yumuşak ızgara dokusu: arka planı düz siyah olmaktan kurtarır. */
-.bg-grid {
-  background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.035) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 100%);
+/* Kağıt dokusu: çok hafif noktalı desen. */
+.bg-paper {
+  background-image: radial-gradient(rgb(23 24 31 / 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
 }
 
 .text-gradient {
-  background: linear-gradient(100deg, #ffd48a 0%, #ffb443 40%, #ff7a45 100%);
+  background: linear-gradient(100deg, #e8541e 0%, #f0803c 55%, #23305c 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -112,35 +132,45 @@ body {
   }
   .btn-primary {
     background: var(--color-primary);
-    color: #1a1204;
+    color: #fff;
   }
   .btn-primary:hover {
-    background: #ffc46a;
+    background: var(--color-primary-deep);
     transform: translateY(-1px);
-    box-shadow: var(--shadow-glow);
+    box-shadow: var(--shadow-pop);
+  }
+  .btn-dark {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .btn-dark:hover {
+    background: var(--color-accent-deep);
+    transform: translateY(-1px);
   }
   .btn-secondary {
-    background: var(--color-surface-2);
+    background: var(--color-surface);
     color: var(--color-ink);
     border: 1px solid var(--color-line-strong);
   }
   .btn-secondary:hover {
-    border-color: #4a5878;
-    background: #202637;
+    background: var(--color-surface-2);
   }
   .btn-ghost {
     color: var(--color-ink-soft);
   }
   .btn-ghost:hover {
     color: var(--color-ink);
-    background: rgb(255 255 255 / 0.05);
+    background: rgb(23 24 31 / 0.05);
+  }
+  .theme-studio .btn-ghost:hover {
+    background: rgb(255 255 255 / 0.06);
   }
   .btn-rec {
     background: var(--color-rec);
     color: #fff;
   }
   .btn-rec:hover {
-    background: #ff6666;
+    background: #be123c;
   }
   .btn:disabled {
     opacity: 0.5;
@@ -151,8 +181,8 @@ body {
 
   .input {
     @apply w-full rounded-xl px-4 py-3 text-base outline-none transition;
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
     color: var(--color-ink);
   }
   .input::placeholder {
@@ -160,13 +190,13 @@ body {
   }
   .input:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgb(255 180 67 / 0.15);
+    box-shadow: 0 0 0 3px rgb(232 84 30 / 0.15);
   }
 
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
-    background: rgb(255 255 255 / 0.06);
-    border: 1px solid rgb(255 255 255 / 0.08);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-line);
     color: var(--color-ink-soft);
   }
 
@@ -177,6 +207,13 @@ body {
 
   .container-x {
     @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  /* Sahne afişi çerçevesi: hafif eğik "film karesi" hissi. */
+  .poster-frame {
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-surface-2);
   }
 }
 

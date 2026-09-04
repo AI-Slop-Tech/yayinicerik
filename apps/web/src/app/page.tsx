@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArrowRight, KeyRound, Mic, Sparkles } from "lucide-react";
+import { ArrowRight, KeyRound, Mic, ShieldCheck, Smartphone, Timer } from "lucide-react";
 import { SceneGrid } from "@/components/scene-card";
 import { SectionHeading } from "@/components/section-heading";
 import { Waveform } from "@/components/waveform";
 import { RotatingWords } from "@/components/rotating-words";
 import { Steps } from "@/components/steps";
-import { PricingCards } from "@/components/pricing";
-import { DubOfTheDay } from "@/components/dub-of-the-day";
+import { PricingPanel } from "@/components/pricing";
+import { FeaturedPremiere } from "@/components/dub-of-the-day";
 import { CommunityCta } from "@/components/community-cta";
 import { listNewScenes, listPopularScenes, countScenes } from "@/lib/scenes";
 import { getDubOfTheDay, countDubs } from "@/lib/dubs";
@@ -18,170 +18,158 @@ import { getDubOfTheDay, countDubs } from "@/lib/dubs";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [popular, fresh, dub, sceneCount, dubCount] = await Promise.all([
+  const [popular, fresh, premiere, sceneCount, dubCount] = await Promise.all([
     listPopularScenes(8),
     listNewScenes(4),
     getDubOfTheDay(),
     countScenes(),
     countDubs(),
   ]);
+  const ticker = [...popular, ...fresh].map((s) => s.title);
 
   return (
     <>
-      {/* HERO */}
+      {/* HERO: sol metin, sağ "kura kartı" destesi */}
       <section className="relative overflow-hidden">
-        <div className="bg-grid absolute inset-0 -z-10" />
-        <div className="absolute -top-40 left-1/2 -z-10 h-[520px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_180_67/0.16),transparent)]" />
-        <div className="container-x grid items-center gap-12 pb-20 pt-14 sm:pt-20 lg:grid-cols-[1.15fr_1fr] lg:pb-28">
+        <div className="bg-paper absolute inset-0 -z-10" />
+        <div className="container-x grid items-center gap-14 pb-16 pt-12 sm:pt-20 lg:grid-cols-[1.2fr_1fr] lg:pb-24">
           <div>
-            <p className="chip mb-5">
-              <span className="size-1.5 rounded-full bg-rec animate-pulse-rec" /> Çok oyunculu dublaj oyunu
-            </p>
-            <h1 className="font-display text-5xl font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
-              Sahneyi seslendir.
+            <p className="eyebrow mb-4">Ekip oyunu · tarayıcıda · ücretsiz</p>
+            <h1 className="font-display text-[2.75rem] font-extrabold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.25rem]">
+              Rolünü çek.
               <br />
-              <span className="text-ink-soft">Arkadaşlarınla.</span>
+              Sesini ver.
+              <br />
+              <span className="text-primary">Prömiyeri birlikte izle.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-ink-soft leading-relaxed">
-              Bu akşam <RotatingWords /> birlikte dublajlayın. Karakterini al, repliklerini kaydet; herkesin sesi tek
-              bir final videoda birleşsin.
+              Bu akşam ekibinle <RotatingWords /> seslendirin. Roller kura ile dağıtılır, herkes kendi repliğini kaydeder,
+              sonunda tek bir video çıkar. Kim kimi seslendirdi, prömiyere kadar sır.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/oda-olustur" className="btn btn-primary px-7 py-3.5 text-base">
-                <Mic className="size-5" aria-hidden /> Oda kur
+                <Mic className="size-5" aria-hidden /> Ekip kur
               </Link>
               <Link href="/katil" className="btn btn-secondary px-7 py-3.5 text-base">
-                <KeyRound className="size-5" aria-hidden /> Kodla katıl
+                <KeyRound className="size-5" aria-hidden /> Kodum var
               </Link>
             </div>
-            <dl className="mt-10 flex flex-wrap gap-8 text-sm">
-              <div>
-                <dt className="text-ink-faint">Sahne</dt>
-                <dd className="font-display text-2xl font-bold">{sceneCount}</dd>
-              </div>
-              <div>
-                <dt className="text-ink-faint">Üretilen dublaj</dt>
-                <dd className="font-display text-2xl font-bold">{dubCount.toLocaleString("tr-TR")}</dd>
-              </div>
-              <div>
-                <dt className="text-ink-faint">Kurulum</dt>
-                <dd className="font-display text-2xl font-bold">Yok</dd>
-              </div>
-            </dl>
+            <ul className="mt-10 grid max-w-lg grid-cols-3 gap-4 text-sm">
+              {[
+                { icon: Smartphone, t: "Uygulama yok", d: "Telefon tarayıcısı yeter" },
+                { icon: Timer, t: "10 dakika", d: "Kurulumdan prömiyere" },
+                { icon: ShieldCheck, t: "Lisanslı sahneler", d: `${sceneCount} sahne, ${dubCount.toLocaleString("tr-TR")} prömiyer` },
+              ].map((f) => (
+                <li key={f.t}>
+                  <f.icon className="size-5 text-primary" aria-hidden />
+                  <p className="mt-2 font-semibold">{f.t}</p>
+                  <p className="text-xs text-ink-faint">{f.d}</p>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Stüdyo kartı */}
-          <div className="card relative p-6 sm:p-8 shadow-card">
-            <div className="flex items-center justify-between text-xs text-ink-faint">
-              <span className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-rec animate-pulse-rec" /> KAYIT
-              </span>
-              <span className="font-mono">00:00.000 / 00:42.000</span>
-            </div>
-            <div className="mt-6 space-y-3">
-              {[
-                { who: "Deniz", color: "#ff5d73", text: "O simit benim. Dün gece rüyamda gördüm.", you: true },
-                { who: "Ege", color: "#5ea8ff", text: "Rüya görmek mülkiyet hakkı vermez Deniz." },
-                { who: "Deniz", color: "#ff5d73", text: "Annem sana dedi ki 'kardeşine bırak'. Duydum.", you: true },
-              ].map((l, i) => (
-                <div
-                  key={i}
-                  className={`rounded-xl border p-3.5 text-sm ${l.you ? "border-primary/40 bg-primary/5" : "border-line bg-bg-alt"}`}
-                >
-                  <div className="mb-1 flex items-center gap-2 text-xs">
-                    <span className="size-2 rounded-full" style={{ background: l.color }} />
-                    <span className="font-semibold">{l.who}</span>
-                    {l.you && <span className="chip py-0 text-[10px] text-primary">SEN</span>}
-                  </div>
-                  <p className="text-ink">{l.text}</p>
+          {/* Kura kartı destesi */}
+          <div className="relative mx-auto w-full max-w-sm lg:max-w-none" aria-hidden="true">
+            <div className="absolute inset-x-6 top-4 h-full rotate-[4deg] rounded-[22px] bg-accent-soft" />
+            <div className="absolute inset-x-3 top-2 h-full rotate-[2deg] rounded-[22px] bg-primary-soft" />
+            <div className="card relative p-6 shadow-card sm:p-7">
+              <div className="flex items-center justify-between text-xs">
+                <span className="chip">Ekip kodu · <span className="font-mono font-bold text-ink">N4KQ7W</span></span>
+                <span className="text-ink-faint">4 / 4 hazır</span>
+              </div>
+              <p className="mt-6 text-xs font-semibold tracking-[0.18em] uppercase text-ink-faint">Senin rolün</p>
+              <p className="font-display text-3xl font-extrabold text-primary">Dedektif Pamuk</p>
+              <p className="mt-1 text-sm text-ink-soft">Kedi Dedektif: Kayıp balık · 2 replik</p>
+              <div className="mt-5 space-y-2.5">
+                <div className="rounded-xl border border-primary/40 bg-primary-soft/60 p-3.5">
+                  <p className="text-[11px] font-semibold text-primary">0:06 · SIRA SENDE</p>
+                  <p className="mt-1 text-sm">Kimse odadan çıkmasın. Bu balığı bulacağım. Muhtemelen içimde.</p>
                 </div>
-              ))}
+                <div className="rounded-xl border border-line bg-surface-2 p-3.5 opacity-70">
+                  <p className="text-[11px] font-semibold text-ink-faint">0:12 · ??? </p>
+                  <p className="mt-1 text-sm blur-[3px] select-none">Ben yapmadım! Ben sadece kokladım. Çok. Uzun süre.</p>
+                </div>
+              </div>
+              <div className="mt-5 flex items-center justify-between">
+                <Waveform bars={20} className="h-8 text-primary" />
+                <span className="btn btn-rec pointer-events-none px-4 py-2">
+                  <span className="size-2 rounded-full bg-white animate-pulse-rec" /> 3 · 2 · 1
+                </span>
+              </div>
             </div>
-            <div className="mt-6 flex items-center justify-between">
-              <Waveform bars={22} className="text-primary h-8" />
-              <span className="btn btn-rec pointer-events-none px-4 py-2">
-                <Mic className="size-4" aria-hidden /> Kaydet
+          </div>
+        </div>
+
+        {/* Kayan sahne şeridi */}
+        <div className="border-y border-line bg-surface py-3 overflow-hidden" aria-hidden="true">
+          <div className="flex w-max gap-10 whitespace-nowrap animate-ticker text-sm font-semibold text-ink-soft">
+            {[...ticker, ...ticker].map((t, i) => (
+              <span key={i} className="flex items-center gap-10">
+                {t} <span className="size-1.5 rounded-full bg-primary" />
               </span>
-            </div>
-            <span className="absolute -left-4 -top-4 hidden rounded-full border border-line bg-surface px-3 py-1.5 text-xs shadow-card sm:block">
-              Oda <span className="font-mono font-bold text-primary">K7X2PQ</span>
-            </span>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* NASIL OYNANIR */}
-      <section className="container-x py-16" id="nasil-oynanir">
+      {/* KATALOG */}
+      <section className="container-x pt-16">
         <SectionHeading
-          eyebrow="Nasıl oynanır"
-          title="Dört adım, tek oturuş."
-          description="Kayıt sırasında kimse kimseyi duymaz. Sesler yalnızca final videoda bir araya gelir; onu da ilk kez birlikte izlersiniz."
-          href="/nasil-oynanir"
-          hrefLabel="Ayrıntılı rehber"
-        />
-        <Steps />
-      </section>
-
-      {/* POPÜLER SAHNELER */}
-      <section className="container-x py-16">
-        <SectionHeading
-          eyebrow="Oyna"
-          title="Bir sahne seç."
-          description="Her sahne kaç karakteri olduğunu söyler; odanı o sayıya göre kur."
+          eyebrow="Katalog"
+          title="Bu hafta en çok oynananlar"
+          description="Sayı, sahnede kaç rol olduğunu gösterir. Ekibin daha kalabalıksa fazlası seyirci olur; daha azsa biri iki rol alır."
           href="/sahneler"
+          hrefLabel="Kataloğu aç"
         />
         <SceneGrid scenes={popular} priorityCount={4} />
-      </section>
-
-      {/* YENİ SAHNELER */}
-      <section className="container-x py-16">
-        <SectionHeading
-          eyebrow="Yeni eklendi"
-          title="Taze sahneler."
-          description="Katalog her hafta büyüyor. En son eklenenler burada."
-          href="/sahneler?sort=new"
-          hrefLabel="Yenileri gör"
-        />
-        <SceneGrid scenes={fresh} />
-      </section>
-
-      {/* FİYATLANDIRMA */}
-      <section className="container-x py-16" id="vip">
-        <SectionHeading
-          eyebrow="Fiyatlandırma"
-          title="Daha hızlı, daha keskin dublaj."
-          description="Ücretsiz oynamaya devam et. VIP, render işini kuyruğun önüne alır ve filigransız 1080p teslim eder."
-        />
-        <PricingCards />
-      </section>
-
-      {/* GÜNÜN DUBLAJI */}
-      <section className="container-x py-16">
-        <SectionHeading
-          eyebrow="Öne çıkan"
-          title="Bugün ne çıktı?"
-          description="Seçtiğimiz bir oyun. Videodaki her ses oyunculara ait."
-          href="/dublajlar"
-          hrefLabel="Tüm dublajlar"
-        />
-        <DubOfTheDay dub={dub} />
-      </section>
-
-      {/* TOPLULUK */}
-      <section className="container-x py-16">
-        <CommunityCta />
-      </section>
-
-      {/* SON CTA */}
-      <section className="container-x pt-8">
-        <div className="flex flex-col items-center gap-4 text-center">
-          <Sparkles className="size-6 text-primary" aria-hidden />
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Bu akşamın planı hazır.</h2>
-          <p className="max-w-md text-ink-soft">Bir oda aç, kodu gruba at. Gerisi sürpriz.</p>
-          <Link href="/oda-olustur" className="btn btn-primary mt-2 px-7 py-3.5 text-base">
-            Oda kur <ArrowRight className="size-5" aria-hidden />
-          </Link>
+        <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-ink-soft">
+          <span>Yeni eklenenler:</span>
+          {fresh.map((s) => (
+            <Link key={s.id} href={`/sahne/${s.slug}`} className="chip hover:border-primary hover:text-primary">
+              {s.title}
+            </Link>
+          ))}
         </div>
+      </section>
+
+      {/* NASIL İŞLER */}
+      <section className="container-x py-20" id="nasil-isler">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <p className="eyebrow mb-2">Nasıl işler</p>
+            <h2 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">Bir sahne, dört adım, tek prömiyer.</h2>
+            <p className="mt-3 text-ink-soft leading-relaxed">
+              Kayıt sırasında kimse kimseyi duymaz. Sesler yalnızca final videoda buluşur; onu da ilk kez birlikte izlersiniz.
+            </p>
+            <Link href="/nasil-oynanir" className="btn btn-secondary mt-6">
+              Ayrıntılı rehber <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+          <Steps />
+        </div>
+      </section>
+
+      {/* PRÖMİYER */}
+      <section className="border-y border-line bg-surface py-20">
+        <div className="container-x">
+          <FeaturedPremiere dub={premiere} />
+        </div>
+      </section>
+
+      {/* PLUS */}
+      <section className="container-x py-20" id="plus">
+        <SectionHeading
+          eyebrow="Üyelik"
+          title="Ücretsiz oyna. İstersen Plus."
+          description="Ücretsiz plan oyunun tamamını içerir. Plus, prömiyeri hızlandırır, imzasız 1080p verir ve ekibi büyütür."
+        />
+        <PricingPanel />
+      </section>
+
+      {/* TOPLULUK + ÖNERİ */}
+      <section className="container-x pb-4">
+        <CommunityCta />
       </section>
     </>
   );

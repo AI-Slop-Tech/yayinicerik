@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
   const scene = await getSceneBySlug(parsed.data.sceneSlug);
   if (!scene) return NextResponse.json({ error: "Sahne bulunamadı." }, { status: 404 });
-  if (scene.isVip && !identity.isVip) return NextResponse.json({ error: "Bu sahne VIP üyelere özel." }, { status: 403 });
+  if (scene.isVip && !identity.isVip) return NextResponse.json({ error: "Bu sahne Plus üyelerine açık." }, { status: 403 });
 
   const room = await createRoom(identity, scene);
   bumpPlayCount(scene.id);

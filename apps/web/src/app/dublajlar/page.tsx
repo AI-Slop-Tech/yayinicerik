@@ -4,7 +4,7 @@ import { Eye, Users } from "lucide-react";
 import { formatDuration } from "@kngl/shared";
 import { listRecentDubs } from "@/lib/dubs";
 
-export const metadata: Metadata = { title: "Dublajlar", description: "Oyuncuların ürettiği son dublaj videoları." };
+export const metadata: Metadata = { title: "Prömiyerler", description: "Ekiplerin ürettiği son prömiyer videoları." };
 export const dynamic = "force-dynamic";
 
 export default async function DubsPage() {
@@ -12,11 +12,11 @@ export default async function DubsPage() {
   return (
     <div className="container-x py-12">
       <p className="eyebrow mb-2">Arşiv</p>
-      <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">Dublajlar</h1>
-      <p className="mt-3 max-w-xl text-ink-soft">Odalardan çıkan final videolar. Her ses gerçek bir oyuncuya ait.</p>
+      <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">Prömiyerler</h1>
+      <p className="mt-3 max-w-xl text-ink-soft">Ekiplerin herkese açık bıraktığı final videolar. Her ses gerçek bir oyuncuya ait.</p>
 
       {dubs.length === 0 ? (
-        <div className="card mt-10 p-10 text-center text-ink-soft">Henüz herkese açık dublaj yok. İlkini sen üret.</div>
+        <div className="card mt-10 p-10 text-center text-ink-soft">Henüz herkese açık prömiyer yok. İlkini senin ekibin yapsın.</div>
       ) : (
         <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {dubs.map((d) => (

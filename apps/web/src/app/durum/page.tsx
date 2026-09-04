@@ -26,7 +26,7 @@ export default async function StatusPage() {
     <div className="container-x py-12">
       <div className="mx-auto max-w-xl">
         <p className="eyebrow mb-2">Durum</p>
-        <h1 className="font-display text-4xl font-bold tracking-tight">{allOk ? "Tüm sistemler çalışıyor" : "Kısmi kesinti"}</h1>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight">{allOk ? "Tüm sistemler çalışıyor" : "Kısmi kesinti"}</h1>
         <ul className="card mt-8 divide-y divide-line">
           {results.map((r) => (
             <li key={r.name} className="flex items-center justify-between p-4 text-sm">

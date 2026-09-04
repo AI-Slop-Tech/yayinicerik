@@ -1,4 +1,5 @@
-// Sahne afişleri: dış görsel bağımlılığı olmadan, her sahne için deterministik SVG üretir.
+// Sahne afişleri (4:3): dış görsel bağımlılığı olmadan, her sahne için deterministik SVG üretir.
+// Başlık metni SVG içinde değildir; kart bileşeni başlığı ayrıca yazar, böylece kırpma sorunu olmaz.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 
@@ -24,22 +25,22 @@ for (const s of scenes) {
   const shapes = Array.from({ length: 5 }, (_, i) => {
     const r = ((h >> (i * 5)) & 31) / 31;
     const cx = 80 + ((h >> (i * 3)) % 640);
-    const cy = 60 + ((h >> (i * 7)) % 300);
+    const cy = 60 + ((h >> (i * 7)) % 450);
     const rad = 60 + r * 160;
     return `<circle cx="${cx}" cy="${cy}" r="${rad.toFixed(0)}" fill="${i % 2 ? a : b}" opacity="${(0.10 + r * 0.18).toFixed(2)}"/>`;
   }).join("");
   const bars = Array.from({ length: 48 }, (_, i) => {
     const v = 8 + (((h * (i + 3)) >>> 0) % 70);
-    return `<rect x="${40 + i * 15}" y="${(340 - v / 2).toFixed(0)}" width="6" height="${v}" rx="3" fill="#fff" opacity="0.55"/>`;
+    return `<rect x="${40 + i * 15}" y="${(330 - v / 2).toFixed(0)}" width="6" height="${v}" rx="3" fill="#fff" opacity="0.6"/>`;
   }).join("");
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-label="${esc(s.title)}">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="${esc(s.title)}">
 <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg}"/><stop offset="1" stop-color="${a}" stop-opacity="0.55"/></linearGradient>
 <filter id="blur"><feGaussianBlur stdDeviation="40"/></filter></defs>
-<rect width="800" height="450" fill="url(#g)"/>
+<rect width="800" height="600" fill="url(#g)"/>
 <g filter="url(#blur)">${shapes}</g>
 <g>${bars}</g>
 <text x="40" y="62" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif" font-size="18" font-weight="600" fill="#fff" opacity="0.75" letter-spacing="3">${esc(s.source.toUpperCase())}</text>
-<text x="40" y="410" font-family="ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif" font-size="36" font-weight="800" fill="#fff">${esc(s.title)}</text>
+<circle cx="740" cy="540" r="22" fill="#fff" opacity="0.9"/><path d="M733 530l16 10-16 10z" fill="${bg}"/>
 </svg>`;
   await writeFile(path.join(outDir, `${s.slug}.svg`), svg);
 }

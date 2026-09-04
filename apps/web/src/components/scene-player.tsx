@@ -34,7 +34,7 @@ export function ScenePlayer({ src, poster, title }: { src: string; poster: strin
               }}
               aria-label="Önizlemeyi oynat"
             >
-              <span className="flex size-16 items-center justify-center rounded-full bg-primary text-[#1a1204] shadow-glow">
+              <span className="flex size-16 items-center justify-center rounded-full bg-white text-ink shadow-card">
                 <Play className="size-6 fill-current" aria-hidden />
               </span>
             </button>

@@ -15,8 +15,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <div className="container-x py-12">
       <div className="mx-auto max-w-md">
         <p className="eyebrow mb-2">Hesap</p>
-        <h1 className="font-display text-4xl font-bold tracking-tight">Giriş yap</h1>
-        <p className="mt-3 text-ink-soft">Dublajlarını sakla, VIP ol, sahne öner. Misafir olarak oynamaya devam da edebilirsin.</p>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight">Giriş yap</h1>
+        <p className="mt-3 text-ink-soft">Prömiyerlerini sakla, Plus&apos;a geç, sahne öner. Misafir olarak oynamaya devam da edebilirsin.</p>
         <div className="mt-8">
           <AuthForm next={safeNext} />
         </div>

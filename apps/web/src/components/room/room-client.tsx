@@ -48,7 +48,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
 
   async function share() {
     if (navigator.share) {
-      await navigator.share({ title: "KNGL Dublaj odası", text: `Odaya katıl: ${code}`, url: shareUrl }).catch(() => {});
+      await navigator.share({ title: "KNGL Dublaj ekibi", text: `Ekibe katıl: ${code}`, url: shareUrl }).catch(() => {});
     } else {
       await copy("link");
     }
@@ -75,7 +75,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
             type="button"
             onClick={() => copy("code")}
             className="group flex items-center gap-2 rounded-xl border border-line bg-bg-alt px-4 py-2.5 font-mono text-2xl font-bold tracking-[0.3em] text-primary"
-            title="Kodu kopyala"
+            title="Ekip kodunu kopyala"
           >
             {code}
             {copied === "code" ? <Check className="size-4 text-green" /> : <Copy className="size-4 text-ink-faint group-hover:text-ink" />}
@@ -83,7 +83,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
           <div>
             <p className="font-display font-semibold leading-tight">{scene.title}</p>
             <p className="text-xs text-ink-faint">
-              {scene.characterCount} karakter · {PHASE_LABEL[state.phase]}
+              {scene.characterCount} rol · {PHASE_LABEL[state.phase]}
             </p>
           </div>
         </div>
@@ -110,9 +110,9 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
           {state.phase === "lobby" && (
             <div className="card p-8 text-center">
               <Users className="mx-auto size-8 text-primary" aria-hidden />
-              <h1 className="mt-3 font-display text-2xl font-bold">Oyuncular toplanıyor</h1>
+              <h1 className="mt-3 font-display text-2xl font-extrabold">Ekip toplanıyor</h1>
               <p className="mx-auto mt-2 max-w-sm text-sm text-ink-soft">
-                Kodu paylaş. {scene.characterCount} kişi ideal; {connected.length} kişi bağlı. En fazla {LIMITS.maxPlayers}.
+                Kodu gruba at. {scene.characterCount} kişi ideal; şu an {connected.length} kişi bağlı. En fazla {LIMITS.maxPlayers}.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-2">
                 <button type="button" className="btn btn-secondary" onClick={() => copy("link")}>
@@ -120,7 +120,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
                 </button>
                 <a
                   className="btn btn-secondary"
-                  href={`https://wa.me/?text=${encodeURIComponent(`KNGL Dublaj odasına katıl: ${shareUrl}`)}`}
+                  href={`https://wa.me/?text=${encodeURIComponent(`KNGL Dublaj ekibimize katıl: ${shareUrl}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -129,21 +129,21 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
               </div>
               {isHost ? (
                 <button type="button" className="btn btn-primary mt-8 px-8 py-3.5 text-base" onClick={() => emit(EVENTS.start)} disabled={connected.length < LIMITS.minPlayers || status !== "connected"}>
-                  <Play className="size-5" aria-hidden /> Karakterleri dağıt
+                  <Play className="size-5" aria-hidden /> Kurayı çek
                 </button>
               ) : (
-                <p className="mt-8 text-sm text-ink-faint">Oda sahibinin başlatmasını bekliyorsun…</p>
+                <p className="mt-8 text-sm text-ink-faint">Ekip kurucusunun kurayı çekmesini bekliyorsun…</p>
               )}
             </div>
           )}
 
           {state.phase === "casting" && (
             <div className="card p-8 text-center">
-              <p className="eyebrow mb-2">Karakter dağıtımı</p>
+              <p className="eyebrow mb-2">Kura sonucu</p>
               {myChars.length > 0 ? (
                 <>
-                  <h1 className="font-display text-3xl font-bold">
-                    Sen:{" "}
+                  <h1 className="font-display text-3xl font-extrabold">
+                    Rolün:{" "}
                     {myChars.map((id) => {
                       const c = scene.characters.find((ch) => ch.id === id);
                       return (
@@ -153,12 +153,12 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
                       );
                     })}
                   </h1>
-                  <p className="mt-2 text-sm text-ink-soft">{myLines.length} replik seni bekliyor. Kimin kim olduğu final videoya kadar sır.</p>
+                  <p className="mt-2 text-sm text-ink-soft">{myLines.length} replik seni bekliyor. Kim kimi seslendiriyor, prömiyere kadar sır.</p>
                 </>
               ) : (
                 <>
-                  <h1 className="font-display text-3xl font-bold">Seyircisin</h1>
-                  <p className="mt-2 text-sm text-ink-soft">Bu turda karakter kalmadı; final videoyu herkesle aynı anda izleyeceksin.</p>
+                  <h1 className="font-display text-3xl font-extrabold">Bu tur seyircisin</h1>
+                  <p className="mt-2 text-sm text-ink-soft">Rol kalmadı; prömiyeri ekiple aynı anda izleyeceksin.</p>
                 </>
               )}
               {isHost ? (
@@ -166,7 +166,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
                   <Mic className="size-5" aria-hidden /> Kayda geç
                 </button>
               ) : (
-                <p className="mt-8 text-sm text-ink-faint">Oda sahibi kayda geçince replikler açılır.</p>
+                <p className="mt-8 text-sm text-ink-faint">Ekip kurucusu kayda geçince replikler açılır.</p>
               )}
             </div>
           )}
@@ -174,7 +174,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
           {state.phase === "recording" && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h1 className="font-display text-2xl font-bold">{myLines.length ? "Repliklerin" : "Kayıt sürüyor"}</h1>
+                <h1 className="font-display text-2xl font-extrabold">{myLines.length ? "Repliklerin" : "Kayıt sürüyor"}</h1>
                 <span className="chip">
                   {totalDone} / {totalRequired} replik tamam
                 </span>
@@ -200,7 +200,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
           {state.phase === "rendering" && (
             <div className="card p-10 text-center">
               <Loader2 className="mx-auto size-8 animate-spin text-primary" aria-hidden />
-              <h1 className="mt-4 font-display text-2xl font-bold">Video hazırlanıyor</h1>
+              <h1 className="mt-4 font-display text-2xl font-extrabold">Prömiyer hazırlanıyor</h1>
               <p className="mx-auto mt-2 max-w-sm text-sm text-ink-soft">Bütün sesler birleştiriliyor. Genellikle bir dakikadan kısa sürer; sayfayı açık tut.</p>
             </div>
           )}
@@ -210,7 +210,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
               <video className="aspect-video w-full bg-black" src={state.finalVideoUrl} controls autoPlay playsInline poster={scene.thumbnailUrl} />
               <div className="flex flex-wrap items-center justify-between gap-3 p-5">
                 <div>
-                  <h1 className="font-display text-xl font-bold">Final kesim hazır</h1>
+                  <h1 className="font-display text-xl font-extrabold">Prömiyer hazır</h1>
                   <p className="text-sm text-ink-soft">Seslendirenler: {state.players.filter((p) => (state.assignments[p.id] ?? []).length).map((p) => p.nickname).join(", ")}</p>
                 </div>
                 <div className="flex gap-2">
@@ -229,7 +229,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
 
           {state.phase === "failed" && (
             <div className="card p-10 text-center">
-              <h1 className="font-display text-2xl font-bold">Video üretilemedi</h1>
+              <h1 className="font-display text-2xl font-extrabold">Prömiyer üretilemedi</h1>
               <p className="mt-2 text-sm text-ink-soft">{state.error ?? "Beklenmeyen bir hata oluştu."}</p>
               {isHost && (
                 <button type="button" className="btn btn-primary mt-6" onClick={() => emit(EVENTS.restart)}>
@@ -243,7 +243,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
         {/* Oyuncu paneli */}
         <aside className="card h-fit p-5">
           <h2 className="mb-3 flex items-center justify-between text-xs font-semibold tracking-widest text-ink-faint">
-            OYUNCULAR <span>{connected.length}</span>
+            EKİP <span>{connected.length}</span>
           </h2>
           <ul className="space-y-2">
             {state.players.map((p) => {
@@ -256,7 +256,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
                   <span className="min-w-0 flex-1">
                     <span className="flex items-center gap-1.5 truncate font-medium">
                       {p.nickname}
-                      {p.isHost && <Crown className="size-3.5 text-primary" aria-label="Oda sahibi" />}
+                      {p.isHost && <Crown className="size-3.5 text-primary" aria-label="Ekip kurucusu" />}
                       {p.id === identity.id && <span className="text-xs text-ink-faint">(sen)</span>}
                     </span>
                     <span className="block text-xs text-ink-faint">
@@ -267,7 +267,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
                         : revealChar && c
                           ? c.name
                           : required
-                            ? "Karakter gizli"
+                            ? "Rol gizli"
                             : "Seyirci"}
                     </span>
                   </span>
@@ -281,7 +281,7 @@ export function RoomClient({ code, scene, identity, token, realtimeUrl, initialS
             })}
           </ul>
           <Link href="/oda-olustur" className="btn btn-ghost mt-4 w-full">
-            Yeni oda kur
+            Yeni ekip kur
           </Link>
         </aside>
       </div>

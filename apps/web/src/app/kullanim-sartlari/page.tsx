@@ -21,9 +21,10 @@ export default function TermsPage() {
         Kaydettiğin seslerin hakları sende kalır; final videoyu üretmek, saklamak ve senin izninle öne çıkarmak için bize sınırlı bir
         kullanım hakkı vermiş olursun.
       </p>
-      <h2>VIP üyelik</h2>
+      <h2>Plus üyelik</h2>
       <p>
-        VIP üyelik 30 gün geçerlidir, otomatik yenilenmez. Kullanılmamış süre için iade yapılmaz; hizmet kaynaklı kesintilerde süre uzatılır.
+        Plus üyelik aylık yenilenir ve hesap sayfasından her an iptal edilebilir; iptalde dönem sonuna kadar avantajlar sürer. Hizmet
+        kaynaklı kesintilerde süre uzatılır.
       </p>
     </LegalPage>
   );

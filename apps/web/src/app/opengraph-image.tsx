@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "KNGL Dublaj — Sahneyi seslendir. Arkadaşlarınla.";
+export const alt = "KNGL Dublaj — Rolünü çek. Sesini ver. Prömiyeri birlikte izle.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,19 +15,19 @@ export default function OpenGraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 72,
-          background: "linear-gradient(135deg, #090b11 0%, #151a2a 60%, #2a1e12 100%)",
-          color: "#f4f5f9",
+          background: "linear-gradient(135deg, #f7f3ec 0%, #efe9dd 60%, #fde7dc 100%)",
+          color: "#17181f",
           fontFamily: "sans-serif",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <div style={{ width: 56, height: 56, borderRadius: 16, background: "#ffb443", display: "flex" }} />
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: "#e8541e", display: "flex" }} />
           <div style={{ fontSize: 40, fontWeight: 700 }}>KNGL Dublaj</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div style={{ fontSize: 88, fontWeight: 800, lineHeight: 1 }}>Sahneyi seslendir.</div>
-          <div style={{ fontSize: 88, fontWeight: 800, lineHeight: 1, color: "#ffb443" }}>Arkadaşlarınla.</div>
-          <div style={{ fontSize: 30, color: "#a3a9ba", marginTop: 20 }}>Oda kur · Karakterini al · Repliklerini kaydet · Birlikte izle</div>
+          <div style={{ fontSize: 84, fontWeight: 800, lineHeight: 1 }}>Rolünü çek. Sesini ver.</div>
+          <div style={{ fontSize: 84, fontWeight: 800, lineHeight: 1, color: "#e8541e" }}>Prömiyeri birlikte izle.</div>
+          <div style={{ fontSize: 30, color: "#5b6070", marginTop: 20 }}>Ekibini topla · Rolünü çek · Sesini ver · Prömiyer</div>
         </div>
       </div>
     ),

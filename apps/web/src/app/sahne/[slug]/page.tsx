@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, Crown, Users, Mic } from "lucide-react";
+import { Clock, Sparkles, Users, Mic } from "lucide-react";
 import { formatDuration } from "@kngl/shared";
 import { getSceneBySlug, listPopularScenes } from "@/lib/scenes";
 import { SceneGrid } from "@/components/scene-card";
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!scene) return { title: "Sahne bulunamadı" };
   return {
     title: scene.title,
-    description: `${scene.description} ${scene.characterCount} karakter, ${formatDuration(scene.durationSeconds)}.`,
+    description: `${scene.description} ${scene.characterCount} rol, ${formatDuration(scene.durationSeconds)}.`,
     openGraph: { images: [{ url: scene.thumbnailUrl }] },
   };
 }
@@ -41,18 +41,18 @@ export default async function ScenePage({ params }: Params) {
               <Clock className="size-3" aria-hidden /> {formatDuration(scene.durationSeconds)}
             </span>
             <span className="chip">
-              <Users className="size-3" aria-hidden /> {scene.characterCount} karakter
+              <Users className="size-3" aria-hidden /> {scene.characterCount} rol
             </span>
             {scene.isVip && (
               <span className="chip border-primary/50 text-primary">
-                <Crown className="size-3" aria-hidden /> VIP sahne
+                <Sparkles className="size-3" aria-hidden /> Plus sahnesi
               </span>
             )}
           </div>
-          <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">{scene.title}</h1>
+          <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">{scene.title}</h1>
           <p className="mt-3 text-ink-soft leading-relaxed">{scene.description}</p>
 
-          <h2 className="mt-8 text-xs font-semibold tracking-widest text-ink-faint">KARAKTERLER</h2>
+          <h2 className="mt-8 text-xs font-semibold tracking-widest text-ink-faint">ROLLER</h2>
           <ul className="mt-3 flex flex-wrap gap-2">
             {scene.characters.map((c) => (
               <li key={c.id} className="chip">
@@ -63,10 +63,10 @@ export default async function ScenePage({ params }: Params) {
           </ul>
 
           <Link href={`/oda-olustur?sahne=${scene.slug}`} className="btn btn-primary mt-8 w-full py-3.5 text-base">
-            <Mic className="size-5" aria-hidden /> Bu sahneyle oda kur
+            <Mic className="size-5" aria-hidden /> Bu sahneyle ekip kur
           </Link>
           <p className="mt-3 text-center text-xs text-ink-faint">
-            {scene.playCount.toLocaleString("tr-TR")} kez oynandı · Kodu paylaş, {scene.characterCount} kişi yeter.
+            {scene.playCount.toLocaleString("tr-TR")} kez oynandı · {scene.characterCount} kişi yeter, kalanı seyirci.
           </p>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default async function ScenePage({ params }: Params) {
                 <span className="w-10 shrink-0 font-mono text-xs text-ink-faint pt-1">{formatDuration(l.start)}</span>
                 <div>
                   <p className="text-xs font-semibold" style={{ color: c?.color }}>
-                    {c?.name ?? `Karakter ${i + 1}`}
+                    {c?.name ?? `Rol ${i + 1}`}
                   </p>
                   <p className="text-sm">{l.text}</p>
                 </div>
@@ -93,7 +93,7 @@ export default async function ScenePage({ params }: Params) {
 
       {related.length > 0 && (
         <section className="mt-16">
-          <h2 className="mb-6 font-display text-2xl font-bold tracking-tight">Benzer sahneler</h2>
+          <h2 className="mb-6 font-display text-2xl font-extrabold tracking-tight">Bunları da deneyin</h2>
           <SceneGrid scenes={related} />
         </section>
       )}

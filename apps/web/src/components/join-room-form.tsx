@@ -27,7 +27,7 @@ export function JoinRoomForm({ initialCode, nickname }: { initialCode: string; n
         if (!r.ok) throw new Error(((await r.json()) as { error?: string }).error ?? "Takma ad kabul edilmedi.");
       }
       const res = await fetch(`/api/rooms/${c}`);
-      if (!res.ok) throw new Error(((await res.json()) as { error?: string }).error ?? "Oda bulunamadı.");
+      if (!res.ok) throw new Error(((await res.json()) as { error?: string }).error ?? "Ekip bulunamadı.");
       router.push(`/oda/${c}`);
     } catch (err) {
       setError((err as Error).message);
@@ -39,14 +39,14 @@ export function JoinRoomForm({ initialCode, nickname }: { initialCode: string; n
     <form onSubmit={submit} className="card p-6 sm:p-8 space-y-6">
       <div>
         <label htmlFor="code" className="mb-2 block text-sm font-medium">
-          Oda kodu
+          Ekip kodu
         </label>
         <input
           id="code"
           className="input text-center font-mono text-2xl tracking-[0.4em] uppercase"
           value={code}
           onChange={(e) => setCode(normalizeRoomCode(e.target.value))}
-          placeholder="K7X2PQ"
+          placeholder="N4KQ7W"
           maxLength={ROOM_CODE_LENGTH}
           autoCapitalize="characters"
           autoComplete="off"
@@ -69,7 +69,7 @@ export function JoinRoomForm({ initialCode, nickname }: { initialCode: string; n
       )}
       <button type="submit" className="btn btn-primary w-full py-3.5 text-base" disabled={busy}>
         {busy ? <Loader2 className="size-5 animate-spin" aria-hidden /> : <KeyRound className="size-5" aria-hidden />}
-        Odaya katıl
+        Ekibe katıl
       </button>
     </form>
   );

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Crown } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { getIdentity } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
 
@@ -15,7 +15,7 @@ export default async function AccountPage() {
     <div className="container-x py-12">
       <div className="mx-auto max-w-2xl">
         <p className="eyebrow mb-2">Hesap</p>
-        <h1 className="font-display text-4xl font-bold tracking-tight">Merhaba, {identity.nickname}</h1>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight">Merhaba, {identity.nickname}</h1>
         <div className="card mt-8 divide-y divide-line">
           <div className="flex items-center justify-between p-5">
             <div>
@@ -34,7 +34,7 @@ export default async function AccountPage() {
               <p className="font-medium flex items-center gap-1.5">
                 {identity.isVip ? (
                   <>
-                    <Crown className="size-4 text-primary" aria-hidden /> KNGL VIP
+                    <Sparkles className="size-4 text-primary" aria-hidden /> KNGL Plus
                   </>
                 ) : (
                   "Ücretsiz"
@@ -43,14 +43,14 @@ export default async function AccountPage() {
             </div>
             {!identity.isVip && (
               <Link href="/fiyatlandirma" className="btn btn-primary">
-                VIP ol
+                Plus&apos;a geç
               </Link>
             )}
           </div>
           <div className="flex items-center justify-between p-5">
             <div>
-              <p className="text-sm text-ink-faint">Dublajlarım</p>
-              <p className="font-medium">Odalarından çıkan videolar 30 gün saklanır (VIP: süresiz).</p>
+              <p className="text-sm text-ink-faint">Prömiyerlerim</p>
+              <p className="font-medium">Ekiplerinden çıkan videolar 30 gün saklanır (Plus: süresiz).</p>
             </div>
             <Link href="/dublajlar" className="btn btn-ghost">
               Arşiv

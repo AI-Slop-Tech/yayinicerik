@@ -1,24 +1,24 @@
 import Link from "next/link";
 import { BRAND } from "@kngl/shared";
 
+/** Marka işareti: konuşma balonu içinde "K" harfi ve ses dalgası. */
 export function LogoMark({ size = 32 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="9" fill="#ffb443" />
-      <rect x="9" y="6" width="6" height="14" rx="3" fill="#1a1204" />
-      <rect x="17" y="10" width="6" height="10" rx="3" fill="#1a1204" opacity="0.7" />
-      <path d="M9 23c0 2.5 3 4 7 4s7-1.5 7-4" stroke="#1a1204" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      <path d="M6 5h20a4 4 0 0 1 4 4v12a4 4 0 0 1-4 4H14l-6 5v-5H6a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4z" fill="#e8541e" />
+      <path d="M10 10v10M10 15l6-5M10 15l6 5" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M20 12v6M23 10v10M26 13v4" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.85" />
     </svg>
   );
 }
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5 group" aria-label={`${BRAND.name} ana sayfa`}>
+    <Link href="/" className="flex items-center gap-2.5" aria-label={`${BRAND.name} ana sayfa`}>
       <LogoMark />
       {!compact && (
-        <span className="font-display text-lg font-bold tracking-tight leading-none">
-          KNGL<span className="text-primary"> Dublaj</span>
+        <span className="font-display text-lg font-extrabold tracking-tight leading-none">
+          KNGL <span className="text-primary">Dublaj</span>
         </span>
       )}
     </Link>

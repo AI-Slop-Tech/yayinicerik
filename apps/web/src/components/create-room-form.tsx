@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Crown, Loader2, Mic, Users } from "lucide-react";
+import { Sparkles, Loader2, Mic, Users } from "lucide-react";
 
 interface SceneOption {
   slug: string;
@@ -41,7 +41,7 @@ export function CreateRoomForm({
         body: JSON.stringify({ sceneSlug: slug, nickname: nickname ? undefined : nick }),
       });
       const data = (await res.json()) as { code?: string; error?: string };
-      if (!res.ok || !data.code) throw new Error(data.error ?? "Oda kurulamadı.");
+      if (!res.ok || !data.code) throw new Error(data.error ?? "Ekip kurulamadı.");
       router.push(`/oda/${data.code}`);
     } catch (err) {
       setError((err as Error).message);
@@ -57,7 +57,7 @@ export function CreateRoomForm({
             Takma adın
           </label>
           <input id="nick" className="input" value={nick} onChange={(e) => setNick(e.target.value)} placeholder="örn. mikrofoncu" maxLength={24} required autoComplete="nickname" />
-          <p className="mt-1.5 text-xs text-ink-faint">Diğer oyuncular seni bu adla görür. Kayıt gerekmez.</p>
+          <p className="mt-1.5 text-xs text-ink-faint">Ekip seni bu adla görür. Üyelik gerekmez.</p>
         </div>
       )}
 
@@ -88,7 +88,7 @@ export function CreateRoomForm({
                   </span>
                   {s.isVip && (
                     <span className="chip text-primary">
-                      <Crown className="size-3" aria-hidden /> VIP
+                      <Sparkles className="size-3" aria-hidden /> Plus
                     </span>
                   )}
                 </span>
@@ -98,7 +98,7 @@ export function CreateRoomForm({
         </div>
         {selected && (
           <p className="mt-2 text-xs text-ink-faint">
-            {selected.characterCount} karakter. Fazla oyuncular seyirci olur; eksik olursanız bazı oyuncular birden fazla karakter alır.
+            {selected.characterCount} rol. Ekip kalabalıksa fazlası seyirci olur; eksikse biri iki rol alır.
           </p>
         )}
       </div>
@@ -111,7 +111,7 @@ export function CreateRoomForm({
 
       <button type="submit" className="btn btn-primary w-full py-3.5 text-base" disabled={busy || !slug}>
         {busy ? <Loader2 className="size-5 animate-spin" aria-hidden /> : <Mic className="size-5" aria-hidden />}
-        Odayı kur
+        Ekibi kur
       </button>
     </form>
   );

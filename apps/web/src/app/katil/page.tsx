@@ -12,8 +12,8 @@ export default async function JoinPage({ searchParams }: { searchParams: Promise
     <div className="container-x py-12">
       <div className="mx-auto max-w-md">
         <p className="eyebrow mb-2">Oyna</p>
-        <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">Koda katıl</h1>
-        <p className="mt-3 text-ink-soft">Arkadaşının gönderdiği altı haneli kodu yaz.</p>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">Koda katıl</h1>
+        <p className="mt-3 text-ink-soft">Ekip kurucusunun gönderdiği altı haneli kodu yaz.</p>
         <div className="mt-8">
           <JoinRoomForm initialCode={kod ?? ""} nickname={identity?.nickname ?? null} />
         </div>

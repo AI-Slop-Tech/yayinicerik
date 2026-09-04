@@ -7,7 +7,7 @@ export const BRAND = {
   name: "KNGL Dublaj",
   shortName: "KNGL",
   domain: "kngldublaj.com",
-  tagline: "Sahneyi seslendir. Arkadaşlarınla.",
+  tagline: "Rolünü çek. Sesini ver. Prömiyeri birlikte izle.",
 } as const;
 
 /** Oda kodu: karışıklığa yol açan karakterler (0/O, 1/I/L) çıkarıldı. */

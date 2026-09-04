@@ -4,8 +4,8 @@ import { SceneGrid } from "@/components/scene-card";
 import { SCENE_SOURCES, listScenes } from "@/lib/scenes";
 
 export const metadata: Metadata = {
-  title: "Sahneler",
-  description: "Dizi, film, çizgi film, reklam ve efsane anlardan seslendirilecek sahneler. Karakter sayısına göre filtrele.",
+  title: "Sahne kataloğu",
+  description: "Lisanslı ve kendi yapımımız kısa sahneler. Rol sayısına, türe ve süreye göre filtrele.",
 };
 export const dynamic = "force-dynamic";
 
@@ -30,9 +30,9 @@ export default async function ScenesPage({ searchParams }: { searchParams: Promi
   return (
     <div className="container-x py-12">
       <p className="eyebrow mb-2">Katalog</p>
-      <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">Sahneler</h1>
+      <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">Sahne kataloğu</h1>
       <p className="mt-3 max-w-xl text-ink-soft">
-        Her sahne kaç karakteri olduğunu söyler. Odanı o sayıya göre kur; fazla oyuncular seyirci olur.
+        Kartın köşesindeki sayı rol sayısıdır. Ekibini ona göre topla; fazlası seyirci olur, eksikse biri iki rol alır.
       </p>
 
       <form className="mt-8 flex flex-col gap-3 sm:flex-row" action="/sahneler" method="get">
@@ -65,7 +65,7 @@ export default async function ScenesPage({ searchParams }: { searchParams: Promi
             href={buildHref(sp, { characters: characters === n ? "" : String(n) })}
             className={`chip ${characters === n ? "border-accent text-accent" : ""}`}
           >
-            {n === 4 ? "4+" : n} karakter
+            {n === 4 ? "4+" : n} rol
           </Link>
         ))}
       </div>

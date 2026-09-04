@@ -25,13 +25,15 @@ export default async function RoomPage({ params }: { params: Promise<{ code: str
   if (!scene || !token) notFound();
 
   return (
-    <RoomClient
+    <div className="theme-studio -mb-24 min-h-[calc(100dvh-68px)] pb-24">
+      <RoomClient
       code={code}
       scene={scene}
       identity={{ id: identity.id, nickname: identity.nickname, isVip: identity.isVip }}
       token={token}
       realtimeUrl={env().NEXT_PUBLIC_REALTIME_URL}
       initialState={room}
-    />
+      />
+    </div>
   );
 }

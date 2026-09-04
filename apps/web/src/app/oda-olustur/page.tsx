@@ -3,7 +3,7 @@ import { getIdentity } from "@/lib/auth";
 import { getSceneBySlug, listPopularScenes } from "@/lib/scenes";
 import { CreateRoomForm } from "@/components/create-room-form";
 
-export const metadata: Metadata = { title: "Oda kur", description: "Bir sahne seç, oda kur, kodu arkadaşlarına gönder." };
+export const metadata: Metadata = { title: "Ekip kur", description: "Bir sahne seç, ekip kodunu al, arkadaşlarına gönder." };
 export const dynamic = "force-dynamic";
 
 export default async function CreateRoomPage({ searchParams }: { searchParams: Promise<{ sahne?: string }> }) {
@@ -19,8 +19,8 @@ export default async function CreateRoomPage({ searchParams }: { searchParams: P
     <div className="container-x py-12">
       <div className="mx-auto max-w-2xl">
         <p className="eyebrow mb-2">Oyna</p>
-        <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">Oda kur</h1>
-        <p className="mt-3 text-ink-soft">Bir sahne seç. Odanın kodunu gruba at; herkes tarayıcıdan katılır.</p>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">Ekip kur</h1>
+        <p className="mt-3 text-ink-soft">Bir sahne seç, ekip kodunu al, gruba at. Herkes tarayıcıdan katılır.</p>
         <div className="mt-8">
           <CreateRoomForm
             scenes={options.map((s) => ({ slug: s.slug, title: s.title, characterCount: s.characterCount, isVip: s.isVip, source: s.source }))}

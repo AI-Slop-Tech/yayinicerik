@@ -1,9 +1,12 @@
 # KNGL Dublaj
 
-Arkadaşlarınla online dublaj oyunu: bir oda kur, altı haneli kodu paylaş, sunucu karakterleri rastgele dağıtsın,
-herkes kendi repliklerini kaydetsin, bütün sesler tek bir final videoda birleşsin.
+Ekibinle sahne seslendirme oyunu: bir sahne seç, altı haneli ekip kodunu paylaş, roller kura ile dağıtılsın,
+herkes kendi repliğini kaydetsin, bütün sesler tek bir "prömiyer" videosunda birleşsin.
 
-Tarayıcıda çalışır, kurulum istemez. Koyu, stüdyo hissi veren bir arayüz; Türkçe.
+Tarayıcıda çalışır, kurulum istemez. Açık, sıcak "kağıt" temalı editöryal bir arayüz; oyun ekranı koyu stüdyo temasına geçer. Türkçe.
+
+Tasarım ve metinler özgündür: bölüm yapısı, adım anlatımı, üyelik modeli (KNGL Plus), renk paleti, yazı tipleri, logo ve afişler
+bu projeye özel üretilmiştir; başka bir siteden kopyalanmış görsel, metin ya da medya içermez.
 
 ## Mimari
 

@@ -9,7 +9,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ code: s
   const code = normalizeRoomCode((await params).code);
   if (!isValidRoomCode(code)) return NextResponse.json({ error: "Geçersiz oda kodu." }, { status: 400 });
   const room = await getRoom(code);
-  if (!room) return NextResponse.json({ error: "Oda bulunamadı ya da süresi doldu." }, { status: 404 });
+  if (!room) return NextResponse.json({ error: "Ekip bulunamadı ya da süresi doldu." }, { status: 404 });
   return NextResponse.json(
     { code: room.code, phase: room.phase, sceneSlug: room.sceneSlug, playerCount: room.players.filter((p) => p.connected).length },
     { headers: { "Cache-Control": "no-store" } },

@@ -1,65 +1,50 @@
 import Link from "next/link";
-import { Check, Crown, Zap } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 
-const rows: Array<{ label: string; free: string; vip: string }> = [
-  { label: "Render sırası", free: "Normal", vip: "Öncelikli (hızlı)" },
-  { label: "Video kalitesi", free: "720p", vip: "1080p" },
-  { label: "Filigran", free: "KNGL Dublaj", vip: "Yok" },
-  { label: "Ses değiştirici", free: "Temel", vip: "Profesyonel" },
-  { label: "Sahne kataloğu", free: "Standart", vip: "Standart + VIP sahneler" },
-  { label: "Oda başına oyuncu", free: "6", vip: "8" },
-  { label: "Dublaj arşivi", free: "30 gün", vip: "Süresiz" },
+const PLUS_PERKS = [
+  { t: "Kuyrukta öncelik", d: "Prömiyer videon önce işlenir." },
+  { t: "1080p, imzasız indirme", d: "Ücretsiz planda 720p ve KNGL imzası vardır." },
+  { t: "10 kişilik ekip", d: "Ücretsiz planda 6." },
+  { t: "Süresiz arşiv", d: "Ücretsiz planda 30 gün." },
+  { t: "Plus sahneleri", d: "Yalnızca üyelere açılan uzun sahneler." },
+  { t: "Ses efektleri", d: "Yankı, telsiz, dev ve daha fazlası." },
 ];
 
-export function PricingCards() {
+/** Tek panel: solda karar bilgisi, sağda Plus'ın ne kattığı. Ücretsiz plan tabloya değil cümleye sığar. */
+export function PricingPanel() {
   return (
-    <div className="grid gap-5 lg:grid-cols-2">
-      <div className="card p-7">
-        <p className="eyebrow text-ink-faint mb-2">Ücretsiz</p>
-        <div className="flex items-baseline gap-2">
-          <span className="font-display text-4xl font-bold">₺0</span>
-          <span className="text-ink-faint text-sm">her zaman</span>
+    <div className="card overflow-hidden lg:grid lg:grid-cols-[1fr_1.2fr]">
+      <div className="bg-accent p-8 text-white sm:p-10">
+        <p className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.18em] uppercase text-white/70">
+          <Sparkles className="size-3.5" aria-hidden /> KNGL Plus
+        </p>
+        <div className="mt-6 flex items-baseline gap-2">
+          <span className="font-display text-6xl font-extrabold leading-none">₺79</span>
+          <span className="text-white/70">/ ay</span>
         </div>
-        <p className="mt-3 text-sm text-ink-soft">Oynamak için yeterli olan her şey. Kart bilgisi istemez.</p>
-        <ul className="mt-6 space-y-3 text-sm">
-          {rows.map((r) => (
-            <li key={r.label} className="flex items-center justify-between gap-4 border-b border-line/60 pb-3 last:border-0">
-              <span className="text-ink-soft">{r.label}</span>
-              <span className="font-medium">{r.free}</span>
-            </li>
-          ))}
-        </ul>
-        <Link href="/oda-olustur" className="btn btn-secondary mt-7 w-full">
-          Ücretsiz oyna
+        <p className="mt-4 max-w-xs text-white/80 leading-relaxed">
+          İstediğin zaman iptal. Ücretsiz plan hep açık kalır; Plus yalnızca daha hızlı, daha net ve daha kalabalık oynamak isteyenler için.
+        </p>
+        <Link href="/fiyatlandirma" className="btn btn-primary mt-8">
+          Plus&apos;a geç
         </Link>
+        <p className="mt-6 text-sm text-white/60">
+          Ücretsiz plan: 720p video, KNGL imzası, 6 kişilik ekip, 30 gün arşiv. Kart bilgisi istemez.
+        </p>
       </div>
-
-      <div className="card relative overflow-hidden p-7 border-primary/40 shadow-glow">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 pointer-events-none" />
-        <div className="relative">
-          <p className="eyebrow mb-2 flex items-center gap-1.5">
-            <Crown className="size-3.5" aria-hidden /> KNGL VIP
-          </p>
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-4xl font-bold">₺99</span>
-            <span className="text-ink-faint text-sm">/ 30 gün</span>
-          </div>
-          <p className="mt-3 text-sm text-ink-soft">Render kuyruğunun önüne geç, filigransız 1080p indir.</p>
-          <ul className="mt-6 space-y-3 text-sm">
-            {rows.map((r) => (
-              <li key={r.label} className="flex items-center justify-between gap-4 border-b border-line/60 pb-3 last:border-0">
-                <span className="text-ink-soft">{r.label}</span>
-                <span className="flex items-center gap-1.5 font-medium">
-                  <Check className="size-3.5 text-primary" aria-hidden /> {r.vip}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <Link href="/fiyatlandirma" className="btn btn-primary mt-7 w-full">
-            <Zap className="size-4" aria-hidden /> VIP ol
-          </Link>
-        </div>
-      </div>
+      <ul className="grid gap-5 p-8 sm:grid-cols-2 sm:p-10">
+        {PLUS_PERKS.map((p) => (
+          <li key={p.t} className="flex gap-3">
+            <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary-soft text-primary">
+              <Check className="size-3.5" aria-hidden />
+            </span>
+            <div>
+              <p className="font-semibold">{p.t}</p>
+              <p className="text-sm text-ink-soft">{p.d}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

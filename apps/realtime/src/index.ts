@@ -170,7 +170,7 @@ io.on("connection", (raw) => {
           existing.nickname = me.nickname;
           return s;
         }
-        if (s.players.filter((p) => p.connected).length >= LIMITS.maxPlayers) throw new Error("Oda dolu.");
+        if (s.players.filter((p) => p.connected).length >= LIMITS.maxPlayers) throw new Error("Ekip dolu.");
         // Oyun sürerken gelenler seyirci olarak izler (karakter atanmaz).
         s.players.push({
           id: me.id,
@@ -184,8 +184,8 @@ io.on("connection", (raw) => {
         return s;
       });
       if (!state) {
-        ack?.({ ok: false, error: "Oda bulunamadı ya da süresi doldu." });
-        return fail("Oda bulunamadı ya da süresi doldu.");
+        ack?.({ ok: false, error: "Ekip bulunamadı ya da süresi doldu." });
+        return fail("Ekip bulunamadı ya da süresi doldu.");
       }
       if (socket.data.roomCode && socket.data.roomCode !== code) socket.leave(roomChannel(socket.data.roomCode));
       socket.data.roomCode = code;
@@ -204,7 +204,7 @@ io.on("connection", (raw) => {
     if (!code) return fail("Önce odaya katıl.");
     try {
       const state = await store.update(code, async (s) => {
-        if (s.hostId !== me.id) throw new Error("Sadece oda sahibi başlatabilir.");
+        if (s.hostId !== me.id) throw new Error("Kurayı yalnızca ekip kurucusu çekebilir.");
         if (!canTransition(s.phase, "casting")) throw new Error("Bu aşamada başlatılamaz.");
         const scene = await getScene(s.sceneId);
         if (!scene) throw new Error("Sahne bulunamadı.");
@@ -237,7 +237,7 @@ io.on("connection", (raw) => {
     if (!code) return;
     try {
       const state = await store.update(code, async (s) => {
-        if (s.hostId !== me.id) throw new Error("Sadece oda sahibi kayda geçebilir.");
+        if (s.hostId !== me.id) throw new Error("Kayda yalnızca ekip kurucusu geçebilir.");
         if (!(await setPhase(s, "recording"))) throw new Error("Bu aşamada kayda geçilemez.");
         return s;
       });
@@ -279,7 +279,7 @@ io.on("connection", (raw) => {
     if (!code) return;
     try {
       const state = await store.update(code, async (s) => {
-        if (s.hostId !== me.id) throw new Error("Sadece oda sahibi yeniden başlatabilir.");
+        if (s.hostId !== me.id) throw new Error("Yalnızca ekip kurucusu yeniden başlatabilir.");
         if (!canTransition(s.phase, "lobby")) throw new Error("Şu an yeniden başlatılamaz.");
         s.phase = "lobby";
         s.assignments = {};
