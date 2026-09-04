@@ -20,7 +20,9 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "db:migrate": "node scripts/migrate.mjs",
-    "db:seed": "node scripts/seed.mjs"
+    "db:seed": "node scripts/seed.mjs",
+    "start": "npm run start -w @kngl/web",
+    "postinstall": "npm run build -w @kngl/shared"
   },
   "devDependencies": {
     "ioredis": "5.8.2",
