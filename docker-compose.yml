@@ -39,11 +39,14 @@ services:
       - NEXT_PUBLIC_SITE_URL=${SERVICE_URL_NGINX}
       - NEXT_PUBLIC_REALTIME_URL=
       - UPLOAD_DIR=/data/uploads
+      - MEDIA_DIR=/data/media
       - MEDIA_BASE_URL=/media
+      - ADMIN_PASSWORD=${SERVICE_PASSWORD_ADMIN}
       - PG_POOL_MAX=${PG_POOL_MAX:-10}
       - DISCORD_INVITE_URL=${DISCORD_INVITE_URL:-https://discord.gg/kngl}
     volumes:
       - uploads:/data/uploads
+      - media:/data/media
     depends_on:
       postgres:
         condition: service_healthy

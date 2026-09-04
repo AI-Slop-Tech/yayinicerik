@@ -90,7 +90,9 @@ Compose dosyasında bilinçli olarak `deploy.replicas` yoktur: Coolify konteyner
 2. Servisler listelendiğinde yalnızca **nginx** servisine alan adını tanımla (ör. `https://kngldublaj.com`).
 3. Deploy. `SESSION_SECRET`, Postgres şifresi ve site adresi Coolify'ın magic değişkenleriyle otomatik üretilir; elle değer girmek gerekmez.
    İlk derleme dört imaj ürettiği için 5–10 dakika sürebilir; `migrate` servisi şemayı ve örnek kataloğu bir kez yükleyip biter.
-4. Sahne videolarını `media` volume'una `scenes/<slug>.mp4` yoluyla kopyala.
+4. Sahne videolarını yönetim panelinden yükle: `https://alan-adin/admin` → şifre Coolify'daki `SERVICE_PASSWORD_ADMIN` değeri
+   (Environment Variables ekranında görünür). Panelde sahne ekleyebilir, rolleri ve replik zamanlarını düzenleyebilir, MP4 video ve
+   afiş yükleyebilir, prömiyerleri öne çıkarabilir ve önerileri görebilirsin.
 
 **Alternatif: Railpack / Nixpacks (yalnızca web).** Coolify'ın varsayılan "Application" kaynağı depoyu tek Node uygulaması olarak
 derler; kökteki `npm run build` ve `npm start` bunun için hazırdır (port 3000). Bu yolda Postgres, Redis, realtime ve worker ayrı
@@ -98,6 +100,23 @@ kaynak olarak kurulmalı ve web'e `SESSION_SECRET`, `DATABASE_URL`, `REDIS_URL`,
 verilmelidir. Web tek başına açılır; `/durum` sayfası eksik bağımlılığı gösterir, oyun akışı realtime + worker olmadan tamamlanmaz.
 
 Yazı tipleri repoya gömülüdür (`apps/web/src/fonts`), derleme sırasında internet gerekmez.
+
+## Yönetim paneli
+
+`/admin` adresi `ADMIN_PASSWORD` (≥ 8 karakter) ile korunur; boşsa panel kapalıdır. Oturum 12 saatlik imzalı çerezdir, giriş denemeleri
+IP başına 5 dakikada 5 ile sınırlıdır.
+
+| Ekran | Ne yapar |
+| --- | --- |
+| Sahneler | Katalog listesi, video durumu (yüklü/eksik), yayınla/gizle, sil |
+| Sahne düzenle / yeni | Başlık, slug, tür, süre, roller (isim + renk), replikler (rol, metin, başlangıç–bitiş saniyesi), Plus/yayın bayrakları |
+| Medya paneli | MP4 video yükleme (akış halinde, ilerleme çubuklu, 2 GB'a kadar), afiş yükleme (JPG/PNG/WebP/SVG) |
+| Prömiyerler | Herkese açık / gizli, haftanın prömiyeri işareti, silme |
+| Öneriler | Ziyaretçi önerileri, silme |
+
+Video dosyaları `MEDIA_DIR/scenes/<slug>.mp4` olarak yazılır; nginx bunları `/media/scenes/...` adresinden doğrudan servis eder,
+worker aynı dosyayı render için okur. Video H.264 + AAC MP4 olmalı; süre alanı videonun gerçek süresiyle uyuşmalı, replik zamanları
+bu süre içinde kalmalı.
 
 ## Komutlar
 
