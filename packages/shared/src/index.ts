@@ -164,7 +164,32 @@ export interface RenderJobData {
 
 export const QUEUE_NAMES = {
   render: "kngl-render",
+  /** Sahne videosu hazırlama: kaynaktan kesme ve sıkıştırma. */
+  media: "kngl-media",
 } as const;
+
+/**
+ * Sahne videosu işi. Disk kısıtlı olduğu için her video 720p'ye indirilip
+ * yeniden kodlanır; kaynak dosya iş bitince silinir.
+ */
+export interface MediaJobData {
+  /** "trim": kaynaktan bir aralık kes. "normalize": yüklenen videoyu küçült. */
+  kind: "trim" | "normalize";
+  sceneId: string;
+  sceneSlug: string;
+  /** İşlenecek dosyanın tam yolu (kaynak ya da geçici yükleme). */
+  sourcePath: string;
+  /** trim: başlangıç saniyesi ve süre. */
+  start?: number;
+  duration?: number;
+  /** İş bitince kaynak dosya silinsin mi? Geçici yüklemelerde her zaman true. */
+  deleteSource: boolean;
+}
+
+export interface MediaJobResult {
+  bytes: number;
+  durationSeconds: number;
+}
 
 /** Worker → realtime: oda durumu değişti, istemcilere yayınla. */
 export const ROOM_EVENTS_CHANNEL = "kngl:room-events";

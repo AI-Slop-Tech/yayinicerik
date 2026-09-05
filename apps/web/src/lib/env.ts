@@ -21,6 +21,8 @@ const schema = z.object({
   MEDIA_DIR: z.string().default("./data/media"),
   /** Yönetim paneli şifresi. Boşsa panel kapalıdır. */
   ADMIN_PASSWORD: z.string().optional(),
+  /** Kaynak videoların toplamda kaplayabileceği en fazla alan (GB). Disk kısıtlı sunucular için. */
+  MAX_SOURCE_GB: z.coerce.number().min(0.5).max(500).default(5),
   /** Postgres bağlantı havuzu: her web replikası için üst sınır. */
   PG_POOL_MAX: z.coerce.number().int().min(1).max(100).default(10),
   DISCORD_INVITE_URL: z.string().default("https://discord.gg/kngl"),

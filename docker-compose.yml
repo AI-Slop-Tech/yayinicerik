@@ -37,6 +37,7 @@ services:
       - MEDIA_DIR=/data/media
       - MEDIA_BASE_URL=/media
       - ADMIN_PASSWORD=${SERVICE_PASSWORD_ADMIN}
+      - MAX_SOURCE_GB=${MAX_SOURCE_GB:-5}
       - PG_POOL_MAX=${PG_POOL_MAX:-10}
       - DISCORD_INVITE_URL=${DISCORD_INVITE_URL:-https://discord.gg/kngl}
     volumes:
@@ -80,7 +81,11 @@ services:
       - REDIS_URL=redis://redis:6379
       - UPLOAD_DIR=/data/uploads
       - SCENE_MEDIA_DIR=/data/media/scenes
+      - SOURCE_DIR=/data/media/sources
       - OUTPUT_DIR=/data/media/dubs
+      - SCENE_CRF=${SCENE_CRF:-26}
+      - DUB_RETENTION_DAYS=${DUB_RETENTION_DAYS:-30}
+      - SOURCE_TTL_HOURS=${SOURCE_TTL_HOURS:-24}
       - MEDIA_BASE_URL=/media
       - RENDER_CONCURRENCY=${RENDER_CONCURRENCY:-2}
       - WATERMARK_TEXT=${WATERMARK_TEXT:-KNGL Dublaj}

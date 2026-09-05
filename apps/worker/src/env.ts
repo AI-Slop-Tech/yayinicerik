@@ -11,6 +11,14 @@ export const env = {
   MEDIA_BASE_URL: process.env.MEDIA_BASE_URL ?? "/media",
   FFMPEG_PATH: process.env.FFMPEG_PATH ?? "ffmpeg",
   FFPROBE_PATH: process.env.FFPROBE_PATH ?? "ffprobe",
+  /** Yönetim panelinden yüklenen kaynak videoların geçici dizini. */
+  SOURCE_DIR: process.env.SOURCE_DIR ?? "./data/media/sources",
+  /** Sahne videosu kalitesi. Büyükse dosya küçük olur; 23 net, 28 idareli. */
+  SCENE_CRF: Number(process.env.SCENE_CRF ?? 26),
+  /** Prömiyer videoları kaç gün saklanır (öne çıkarılanlar hariç). */
+  DUB_RETENTION_DAYS: Number(process.env.DUB_RETENTION_DAYS ?? 30),
+  /** Kullanılmayan kaynak videolar kaç saat sonra silinir. */
+  SOURCE_TTL_HOURS: Number(process.env.SOURCE_TTL_HOURS ?? 24),
   /** Aynı anda kaç render (CPU çekirdeği sayısına göre ayarla). */
   CONCURRENCY: Number(process.env.RENDER_CONCURRENCY ?? 2),
   WATERMARK_TEXT: process.env.WATERMARK_TEXT ?? "KNGL Dublaj",

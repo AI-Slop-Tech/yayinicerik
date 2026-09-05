@@ -30,6 +30,19 @@ const execFileAsync = promisify(execFile);
  * Kaynak videonun ses kanalı olup olmadığını ffprobe ile belirler.
  * Sessiz bir videoda `[0:a]` filtresi kurulursa ffmpeg "invalid stream specifier" ile düşer.
  */
+/** Videonun saniye cinsinden süresi. Okunamazsa 0 döner. */
+export async function probeDuration(file: string): Promise<number> {
+  try {
+    const { stdout } = await execFileAsync(env.FFPROBE_PATH, [
+      "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file,
+    ]);
+    const n = Number(stdout.trim());
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  } catch {
+    return 0;
+  }
+}
+
 export async function hasAudioStream(file: string): Promise<boolean> {
   try {
     const { stdout } = await execFileAsync(env.FFPROBE_PATH, [
