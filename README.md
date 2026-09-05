@@ -89,7 +89,7 @@ Compose dosyasında bilinçli olarak `deploy.replicas` yoktur: Coolify konteyner
 1. Coolify → **New Resource → Docker Compose**, depo `AI-Slop-Tech/yayinicerik`, dal `main`, dosya yolu `/docker-compose.yml`.
 2. Servisler listelendiğinde yalnızca **nginx** servisine alan adını tanımla (ör. `https://kngldublaj.com`).
 3. Deploy. `SESSION_SECRET`, Postgres şifresi ve site adresi Coolify'ın magic değişkenleriyle otomatik üretilir; elle değer girmek gerekmez.
-   İlk derleme dört imaj ürettiği için 5–10 dakika sürebilir; `migrate` servisi şemayı ve örnek kataloğu bir kez yükleyip biter.
+   İlk derleme dört imaj ürettiği için 5–10 dakika sürebilir. Şema ve örnek katalog web konteynerinin açılışında otomatik yüklenir.
 4. Sahne videolarını yönetim panelinden yükle: `https://alan-adin/admin` → şifre Coolify'daki `SERVICE_PASSWORD_ADMIN` değeri
    (Environment Variables ekranında görünür). Panelde sahne ekleyebilir, rolleri ve replik zamanlarını düzenleyebilir, MP4 video ve
    afiş yükleyebilir, prömiyerleri öne çıkarabilir ve önerileri görebilirsin.

@@ -25,7 +25,13 @@ RUN addgroup -S kngl && adduser -S kngl -G kngl && mkdir -p /data/uploads && cho
 COPY --from=build --chown=kngl:kngl /app/apps/web/.next/standalone ./
 COPY --from=build --chown=kngl:kngl /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build --chown=kngl:kngl /app/apps/web/public ./apps/web/public
+# Açılışta migrasyon + ilk seed (ayrı bir tek seferlik konteyner gerekmez; Coolify durumu temiz kalır)
+COPY --chown=kngl:kngl scripts/migrate.mjs scripts/seed.mjs ./scripts/
+COPY --chown=kngl:kngl infra/db ./infra/db
+COPY --chown=kngl:kngl apps/web/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 USER kngl
 EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=3s --start-period=20s CMD wget -qO- http://127.0.0.1:3000/api/health || exit 1
+ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["node", "apps/web/server.js"]
