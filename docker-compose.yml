@@ -3,7 +3,8 @@
 #   realtime (Socket.IO, Redis adapter)            →  redis
 #   worker (BullMQ + ffmpeg)                       ←  redis kuyruğu
 #
-# Erişim: http://SUNUCU_IP:8080 (HTTP_PORT). Realtime kendi portunda: 4001 (REALTIME_PORT).
+# Erişim: http://SUNUCU_IP:8420 (HTTP_PORT). Realtime kendi portunda: 4001 (REALTIME_PORT).
+# Port doluysa Coolify → Environment Variables → HTTP_PORT=başka_port ile değiştirilebilir.
 # Ters proxy (Coolify/Traefik/Caddy) kullanmak istersen bu portların önüne koyabilirsin; zorunlu değil.
 # Şema migrasyonu ve ilk seed web konteynerinin açılışında çalışır (apps/web/docker-entrypoint.sh).
 #
@@ -21,15 +22,16 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
-    # Site doğrudan bu porttan açılır: http://SUNUCU_IP:8080
+    # Site doğrudan bu porttan açılır: http://SUNUCU_IP:8420
+    # 8080 gibi yaygın portlar sunucuda dolu olabildiği için sıra dışı bir varsayılan seçildi.
     ports:
-      - "${HTTP_PORT:-8080}:3000"
+      - "${HTTP_PORT:-8420}:3000"
     environment:
       - NODE_ENV=production
       - SESSION_SECRET=${SERVICE_PASSWORD_64_SESSION}
       - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
       - REDIS_URL=redis://redis:6379
-      - NEXT_PUBLIC_SITE_URL=${PUBLIC_URL:-http://localhost:8080}
+      - NEXT_PUBLIC_SITE_URL=${PUBLIC_URL:-http://localhost:8420}
       - NEXT_PUBLIC_REALTIME_URL=
       - UPLOAD_DIR=/data/uploads
       - MEDIA_DIR=/data/media

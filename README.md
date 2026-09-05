@@ -77,7 +77,8 @@ cp .env.example .env && $EDITOR .env      # SERVICE_PASSWORD_64_SESSION, SERVICE
 docker compose up -d --build
 ```
 
-Site `http://SUNUCU_IP:8080` adresinden açılır (`HTTP_PORT`). Realtime kendi portunda yayımlanır: `4001` (`REALTIME_PORT`).
+Site `http://SUNUCU_IP:8420` adresinden açılır (`HTTP_PORT`). Realtime kendi portunda yayımlanır: `4001` (`REALTIME_PORT`).
+Port sunucuda doluysa deploy `port is already allocated` hatası verir; `HTTP_PORT` değerini boş bir portla değiştir.
 Tarayıcı, `NEXT_PUBLIC_REALTIME_URL` boşsa Socket.IO'ya otomatik olarak `http://AYNI_HOST:4001` üzerinden bağlanır.
 
 Ters proxy (Coolify/Traefik, Caddy, nginx) kullanmak istersen bu portların önüne koyabilirsin; zorunlu değildir. O durumda
@@ -91,8 +92,8 @@ Compose dosyasında bilinçli olarak `deploy.replicas` yoktur: Coolify konteyner
 
 1. Coolify → **New Resource → Docker Compose**, depo `AI-Slop-Tech/yayinicerik`, dal `main`, dosya yolu `/docker-compose.yml`.
 2. Deploy. Alan adı ya da proxy ayarı gerekmez.
-3. Site `http://SUNUCU_IP:8080` adresinden açılır. Sunucuda güvenlik duvarı varsa 8080 ve 4001 portlarını aç.
-4. Yönetim paneli `http://SUNUCU_IP:8080/admin`; şifre Coolify'ın ürettiği `SERVICE_PASSWORD_ADMIN` değeridir
+3. Site `http://SUNUCU_IP:8420` adresinden açılır. Sunucuda güvenlik duvarı varsa 8420 ve 4001 portlarını aç.
+4. Yönetim paneli `http://SUNUCU_IP:8420/admin`; şifre Coolify'ın ürettiği `SERVICE_PASSWORD_ADMIN` değeridir
    (Environment Variables ekranında görünür).
 5. Kendi alan adını bağlayacaksan Coolify'da `web` servisine alan adını tanımla, `PUBLIC_URL` ve `NEXT_PUBLIC_REALTIME_URL`
    değerlerini buna göre ayarla.
