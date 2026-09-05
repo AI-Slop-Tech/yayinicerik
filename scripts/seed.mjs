@@ -13,8 +13,9 @@ await client.query("SELECT pg_advisory_lock(727002)");
 await client.query("BEGIN");
 for (const s of scenes) {
   await client.query(
-    `INSERT INTO scenes (slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, play_count, characters, lines, created_at)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb, COALESCE($12::timestamptz, now()))
+    `INSERT INTO scenes (slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, play_count, characters, lines, created_at,
+       license_type, license_holder)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb, COALESCE($12::timestamptz, now()), 'own', 'KNGL Dublaj')
      ON CONFLICT (slug) DO NOTHING`,
     [s.slug, s.title, s.source, s.description, s.durationSeconds, s.thumbnailUrl, s.videoUrl, !!s.isVip, s.playCount ?? 0,
      JSON.stringify(s.characters), JSON.stringify(s.lines), s.createdAt ?? null],

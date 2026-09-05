@@ -25,6 +25,7 @@ export default async function EditScenePage({ params }: { params: Promise<{ id: 
             initial={{
               slug: scene.slug, title: scene.title, source: scene.source, description: scene.description, durationSeconds: scene.duration_seconds,
               thumbnailUrl: scene.thumbnail_url, isVip: scene.is_vip, isPublished: scene.is_published, characters: scene.characters, lines: scene.lines,
+              licenseType: scene.license_type, licenseSource: scene.license_source ?? "", licenseHolder: scene.license_holder ?? "", licenseNote: scene.license_note ?? "",
             }}
           />
         </div>

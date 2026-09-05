@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock, Sparkles, Users, Mic } from "lucide-react";
-import { formatDuration } from "@kngl/shared";
+import { LICENSE_LABELS, formatDuration } from "@kngl/shared";
 import { getSceneBySlug, listPopularScenes } from "@/lib/scenes";
 import { SceneGrid } from "@/components/scene-card";
 import { ScenePlayer } from "@/components/scene-player";
@@ -70,6 +70,29 @@ export default async function ScenePage({ params }: Params) {
           </p>
         </div>
       </div>
+
+      {scene.license.type !== "unknown" && (
+        <section className="mt-10">
+          <div className="card p-4 text-sm text-ink-soft">
+            <span className="font-semibold text-ink">Kaynak:</span> {LICENSE_LABELS[scene.license.type]}
+            {scene.license.holder && <> · {scene.license.holder}</>}
+            {scene.license.source && (
+              scene.license.source.startsWith("http") ? (
+                <>
+                  {" · "}
+                  <a href={scene.license.source} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-primary">
+                    arşiv kaydı
+                  </a>
+                </>
+              ) : null
+            )}
+            {" · "}
+            <Link href="/telif" className="underline underline-offset-2 hover:text-primary">
+              Hak sahibiyseniz
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="mt-16">
         <h2 className="mb-4 text-xs font-semibold tracking-widest text-ink-faint">REPLİKLER</h2>

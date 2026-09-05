@@ -56,6 +56,35 @@ export interface SceneCharacter {
   color: string;
 }
 
+/**
+ * Sahnenin hangi hakla kullanıldığı. Katalogdaki her sahne için kayıt altına alınır;
+ * telif itirazı geldiğinde kaynağı tek yerden göstermek için.
+ */
+export type LicenseType =
+  | "unknown"       // henüz belirlenmedi (yayına alınmamalı)
+  | "public-domain" // telifi dolmuş / kamu malı
+  | "cc"            // Creative Commons (atıf gerekir)
+  | "licensed"      // hak sahibinden izin alındı
+  | "own";          // kendi yapımımız
+
+export const LICENSE_LABELS: Record<LicenseType, string> = {
+  unknown: "Belirsiz",
+  "public-domain": "Kamu malı",
+  cc: "Creative Commons",
+  licensed: "Lisanslı",
+  own: "Kendi yapımımız",
+};
+
+export interface SceneLicense {
+  type: LicenseType;
+  /** Kaynak: arşiv bağlantısı, dosya adı ya da sözleşme referansı. */
+  source: string | null;
+  /** Hak sahibi ya da eser sahibi (atıf için). */
+  holder: string | null;
+  /** Serbest not: izin tarihi, yazışma, kapsam. */
+  note: string | null;
+}
+
 export interface SceneSummary {
   id: string;
   slug: string;
@@ -67,6 +96,7 @@ export interface SceneSummary {
   isVip: boolean;
   playCount: number;
   createdAt: string;
+  license: SceneLicense;
 }
 
 export interface Scene extends SceneSummary {

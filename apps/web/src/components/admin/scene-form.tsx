@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2, Plus, Save, Trash2 } from "lucide-react";
-import type { SceneCharacter, SceneLine } from "@kngl/shared";
+import { LICENSE_LABELS, type LicenseType, type SceneCharacter, type SceneLine } from "@kngl/shared";
 
 export interface SceneFormValues {
   slug: string;
@@ -16,6 +16,10 @@ export interface SceneFormValues {
   isPublished: boolean;
   characters: SceneCharacter[];
   lines: SceneLine[];
+  licenseType: LicenseType;
+  licenseSource: string;
+  licenseHolder: string;
+  licenseNote: string;
 }
 
 const SOURCES = ["Dizi", "Film", "Çizgi film", "Komedi", "Reklam", "Efsane an"];
@@ -32,6 +36,15 @@ const empty: SceneFormValues = {
   slug: "", title: "", source: "Komedi", description: "", durationSeconds: 45, thumbnailUrl: "", isVip: false, isPublished: true,
   characters: [{ id: "c1", name: "", color: PALETTE[0] }, { id: "c2", name: "", color: PALETTE[1] }],
   lines: [{ id: "l1", characterId: "c1", text: "", start: 0, end: 4 }],
+  licenseType: "unknown", licenseSource: "", licenseHolder: "", licenseNote: "",
+};
+
+const LICENSE_HINTS: Record<LicenseType, string> = {
+  unknown: "Kaynak belirlenmeden sahne yayına alınamaz.",
+  "public-domain": "Telifi dolmuş eser. Kaynağa arşiv bağlantısını yaz (ör. archive.org sayfası).",
+  cc: "Creative Commons. Kaynağa bağlantıyı, hak sahibine eser sahibinin adını yaz; atıf sahne sayfasında gösterilir.",
+  licensed: "Hak sahibinden izin alındı. Kaynağa sözleşme/izin referansını, hak sahibine şirketin adını yaz.",
+  own: "Kendi ürettiğimiz içerik. Kaynak zorunlu değil.",
 };
 
 export function SceneForm({ sceneId, initial }: { sceneId?: string; initial?: SceneFormValues }) {
@@ -113,6 +126,36 @@ export function SceneForm({ sceneId, initial }: { sceneId?: string; initial?: Sc
         <div className="flex flex-col justify-end gap-2 text-sm">
           <label className="flex items-center gap-2"><input type="checkbox" checked={v.isPublished} onChange={(e) => set("isPublished", e.target.checked)} /> Yayında</label>
           <label className="flex items-center gap-2"><input type="checkbox" checked={v.isVip} onChange={(e) => set("isVip", e.target.checked)} /> Plus sahnesi</label>
+        </div>
+      </section>
+
+      <section className="card p-5">
+        <h2 className="font-display text-lg font-bold">Lisans</h2>
+        <p className="mt-1 mb-4 text-xs text-ink-faint">
+          Bu sahnenin hangi hakla kullanıldığı. Telif itirazı geldiğinde kaynağı buradan gösterirsin; yayına almak için zorunludur.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium" htmlFor="ltype">Tür</label>
+            <select id="ltype" className="input" value={v.licenseType} onChange={(e) => set("licenseType", e.target.value as LicenseType)}>
+              {(Object.keys(LICENSE_LABELS) as LicenseType[]).map((t) => (
+                <option key={t} value={t}>{LICENSE_LABELS[t]}</option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-ink-faint">{LICENSE_HINTS[v.licenseType]}</p>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-medium" htmlFor="lholder">Hak sahibi / eser sahibi</label>
+            <input id="lholder" className="input" value={v.licenseHolder} maxLength={200} placeholder="ör. Prelinger Archives" onChange={(e) => set("licenseHolder", e.target.value)} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-1.5 block text-sm font-medium" htmlFor="lsource">Kaynak</label>
+            <input id="lsource" className="input" value={v.licenseSource} maxLength={500} placeholder="https://archive.org/details/... ya da sözleşme referansı" onChange={(e) => set("licenseSource", e.target.value)} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="mb-1.5 block text-sm font-medium" htmlFor="lnote">Not</label>
+            <textarea id="lnote" className="input min-h-16" value={v.licenseNote} maxLength={1000} placeholder="İzin tarihi, kapsam, yazışma referansı…" onChange={(e) => set("licenseNote", e.target.value)} />
+          </div>
         </div>
       </section>
 
