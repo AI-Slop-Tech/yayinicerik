@@ -17,8 +17,11 @@ services:
     build: ./infra/nginx
     environment:
       - SERVICE_FQDN_NGINX_80
-    expose:
-      - "80"
+    # Doğrudan erişim: proxy yapılandırmasına bağlı kalmadan site http://SUNUCU_IP:8080 adresinden açılır.
+    # Coolify/Traefik alan adını yönlendirdiğinde de aynı konteyner kullanılır; iki yol birlikte çalışır.
+    # Portu değiştirmek için ortam değişkeni: HTTP_PORT=9090
+    ports:
+      - "${HTTP_PORT:-8080}:80"
     # Coolify'ın proxy'si (Traefik) için yönlendirme: alan adı PUBLIC_HOST'tan, o yoksa Coolify'ın
     # kendi COOLIFY_FQDN değerinden alınır. Böylece arayüzde ayrıca "Domains" ayarı gerekmez.
     # Kendi alan adınız için Coolify → Environment Variables → PUBLIC_HOST=kngldublaj.com yeterlidir.
