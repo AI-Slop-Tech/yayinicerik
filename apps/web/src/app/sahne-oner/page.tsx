@@ -10,7 +10,7 @@ export default function SuggestPage() {
         <p className="eyebrow mb-2">Katalog</p>
         <h1 className="font-display text-4xl font-extrabold tracking-tight">Sahne öner</h1>
         <p className="mt-3 text-ink-soft">
-          Kataloğa yalnızca lisansını alabildiğimiz ya da kendi yapımımız olan içerikler girer. Önerin lisans ekibince değerlendirilir; kabul edilirse adın sahnenin altında yazar.
+          Kataloğa yalnızca kamu malı, Creative Commons ya da lisansını alabildiğimiz içerikler girer. Önerini kaynağıyla birlikte gönderirsen değerlendirme hızlanır; kabul edilirse adın sahnenin altında yazar.
         </p>
         <div className="mt-8">
           <SuggestForm />

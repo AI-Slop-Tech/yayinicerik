@@ -1,5 +1,5 @@
 import "server-only";
-import type { Scene, SceneCharacter, SceneLine } from "@kngl/shared";
+import type { LicenseType, Scene, SceneCharacter, SceneLine } from "@kngl/shared";
 import { invalidatePrefix } from "./cache";
 import { query, queryOne } from "./db";
 import { mediaExists, sceneVideoFileName } from "./media";
@@ -22,6 +22,10 @@ export interface AdminSceneRow {
   lines: SceneLine[];
   created_at: string;
   updated_at: string;
+  license_type: LicenseType;
+  license_source: string | null;
+  license_holder: string | null;
+  license_note: string | null;
 }
 
 export interface AdminScene extends Omit<AdminSceneRow, "created_at" | "updated_at"> {
@@ -30,7 +34,8 @@ export interface AdminScene extends Omit<AdminSceneRow, "created_at" | "updated_
   video: { exists: boolean; size: number; mtime?: string };
 }
 
-const COLS = `id, slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, is_published, play_count, characters, lines, created_at, updated_at`;
+const COLS = `id, slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, is_published, play_count,
+  characters, lines, created_at, updated_at, license_type, license_source, license_holder, license_note`;
 
 async function decorate(r: AdminSceneRow): Promise<AdminScene> {
   const { created_at, updated_at, ...rest } = r;
@@ -58,14 +63,20 @@ export interface SceneInput {
   isPublished: boolean;
   characters: SceneCharacter[];
   lines: SceneLine[];
+  licenseType: LicenseType;
+  licenseSource: string | null;
+  licenseHolder: string | null;
+  licenseNote: string | null;
 }
 
 export async function adminCreateScene(input: SceneInput): Promise<AdminScene> {
   const rows = await query<AdminSceneRow>(
-    `INSERT INTO scenes (slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, is_published, characters, lines)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb) RETURNING ${COLS}`,
+    `INSERT INTO scenes (slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, is_published, characters, lines,
+       license_type, license_source, license_holder, license_note)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb,$12,$13,$14,$15) RETURNING ${COLS}`,
     [input.slug, input.title, input.source, input.description, input.durationSeconds, input.thumbnailUrl, `/media/scenes/${sceneVideoFileName(input.slug)}`,
-     input.isVip, input.isPublished, JSON.stringify(input.characters), JSON.stringify(input.lines)],
+     input.isVip, input.isPublished, JSON.stringify(input.characters), JSON.stringify(input.lines),
+     input.licenseType, input.licenseSource, input.licenseHolder, input.licenseNote],
   );
   await invalidateScenes();
   return decorate(rows[0]);
@@ -74,16 +85,22 @@ export async function adminCreateScene(input: SceneInput): Promise<AdminScene> {
 export async function adminUpdateScene(id: string, input: SceneInput): Promise<AdminScene | null> {
   const rows = await query<AdminSceneRow>(
     `UPDATE scenes SET slug=$2, title=$3, source=$4, description=$5, duration_seconds=$6, thumbnail_url=$7, video_url=$8,
-       is_vip=$9, is_published=$10, characters=$11::jsonb, lines=$12::jsonb, updated_at=now()
+       is_vip=$9, is_published=$10, characters=$11::jsonb, lines=$12::jsonb, updated_at=now(),
+       license_type=$13, license_source=$14, license_holder=$15, license_note=$16
      WHERE id = $1 RETURNING ${COLS}`,
     [id, input.slug, input.title, input.source, input.description, input.durationSeconds, input.thumbnailUrl, `/media/scenes/${sceneVideoFileName(input.slug)}`,
-     input.isVip, input.isPublished, JSON.stringify(input.characters), JSON.stringify(input.lines)],
+     input.isVip, input.isPublished, JSON.stringify(input.characters), JSON.stringify(input.lines),
+     input.licenseType, input.licenseSource, input.licenseHolder, input.licenseNote],
   );
   await invalidateScenes();
   return rows[0] ? decorate(rows[0]) : null;
 }
 
 export async function adminPatchScene(id: string, patch: Partial<Pick<SceneInput, "isPublished" | "isVip" | "thumbnailUrl">>): Promise<void> {
+  if (patch.isPublished === true) {
+    const row = await queryOne<{ license_type: LicenseType }>(`SELECT license_type FROM scenes WHERE id = $1`, [id]);
+    if (row?.license_type === "unknown") throw new Error("Lisans türü belirsiz olan sahne yayınlanamaz. Önce düzenleme ekranından lisansı gir.");
+  }
   const sets: string[] = ["updated_at = now()"];
   const params: unknown[] = [id];
   if (patch.isPublished !== undefined) { params.push(patch.isPublished); sets.push(`is_published = $${params.length}`); }
@@ -179,11 +196,27 @@ export function validateSceneInput(raw: unknown): { ok: true; value: SceneInput 
     outLines.push({ id: String(l.id ?? `l${i + 1}`).replace(/[^a-z0-9_-]/gi, "") || `l${i + 1}`, characterId, text, start: Math.round(start * 10) / 10, end: Math.round(end * 10) / 10 });
   }
   const thumbnailUrl = String(r.thumbnailUrl ?? "").trim() || "/thumbs/_placeholder.svg";
+
+  const licenseTypes: LicenseType[] = ["unknown", "public-domain", "cc", "licensed", "own"];
+  const licenseType = licenseTypes.find((t) => t === r.licenseType) ?? "unknown";
+  const licenseSource = String(r.licenseSource ?? "").trim().slice(0, 500) || null;
+  const licenseHolder = String(r.licenseHolder ?? "").trim().slice(0, 200) || null;
+  const licenseNote = String(r.licenseNote ?? "").trim().slice(0, 1000) || null;
+  const isPublished = r.isPublished === undefined ? true : Boolean(r.isPublished);
+  // Lisansı belirsiz bir sahne yayına alınamaz: telif itirazında kaynağı gösterememek en büyük risk.
+  if (isPublished && licenseType === "unknown") {
+    return { ok: false, error: "Yayına almadan önce lisans türünü seç. Belirsiz kaynaklı sahne yayınlanamaz." };
+  }
+  if (isPublished && licenseType !== "own" && !licenseSource) {
+    return { ok: false, error: "Lisans kaynağını yaz (arşiv bağlantısı, sözleşme referansı ya da izin yazısı)." };
+  }
+
   return {
     ok: true,
     value: {
       slug, title, source, description: String(r.description ?? "").trim().slice(0, 1000), durationSeconds: Math.round(durationSeconds),
-      thumbnailUrl, isVip: Boolean(r.isVip), isPublished: r.isPublished === undefined ? true : Boolean(r.isPublished), characters: chars, lines: outLines,
+      thumbnailUrl, isVip: Boolean(r.isVip), isPublished, characters: chars, lines: outLines,
+      licenseType, licenseSource, licenseHolder, licenseNote,
     },
   };
 }

@@ -27,7 +27,7 @@ const groups = [
     links: [
       { href: "/gizlilik", label: "Gizlilik" },
       { href: "/kullanim-sartlari", label: "Kullanım şartları" },
-      { href: "/telif", label: "Lisans ve telif" },
+      { href: "/telif", label: "Telif bildirimi" },
       { href: "/durum", label: "Sistem durumu" },
     ],
   },
@@ -63,7 +63,13 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {BRAND.name}. Katalogdaki sahneler lisanslı ya da kendi yapımımız olan içeriklerden oluşur.</p>
+          <p>
+            © {new Date().getFullYear()} {BRAND.name}. Katalogdaki sahneler kamu malı, lisanslı ya da kendi yapımımız içeriklerden oluşur.{" "}
+            <Link href="/telif" className="underline underline-offset-2 hover:text-ink">
+              Hak sahibiyseniz
+            </Link>
+            .
+          </p>
           <p>Türkiye&apos;de tasarlandı.</p>
         </div>
       </div>

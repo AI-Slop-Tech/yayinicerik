@@ -1,4 +1,4 @@
-import type { Scene, SceneCharacter, SceneLine, SceneSummary } from "@kngl/shared";
+import type { LicenseType, Scene, SceneCharacter, SceneLine, SceneSummary } from "@kngl/shared";
 import { cached } from "./cache";
 import { query, queryOne } from "./db";
 
@@ -16,10 +16,15 @@ interface SceneRow {
   characters: SceneCharacter[];
   lines: SceneLine[];
   created_at: string;
+  license_type: LicenseType;
+  license_source: string | null;
+  license_holder: string | null;
+  license_note: string | null;
 }
 
 const SUMMARY_COLS = `id, slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, play_count,
-  jsonb_array_length(characters) AS character_count, characters, lines, created_at`;
+  jsonb_array_length(characters) AS character_count, characters, lines, created_at,
+  license_type, license_source, license_holder, license_note`;
 
 function toSummary(r: SceneRow & { character_count?: number }): SceneSummary {
   return {
@@ -33,6 +38,7 @@ function toSummary(r: SceneRow & { character_count?: number }): SceneSummary {
     isVip: r.is_vip,
     playCount: r.play_count,
     createdAt: new Date(r.created_at).toISOString(),
+    license: { type: r.license_type, source: r.license_source, holder: r.license_holder, note: r.license_note },
   };
 }
 

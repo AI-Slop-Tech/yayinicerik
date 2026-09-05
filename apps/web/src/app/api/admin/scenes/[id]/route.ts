@@ -40,7 +40,11 @@ export async function PATCH(req: Request, { params }: Ctx) {
   if (!uuid.safeParse(id).success) return NextResponse.json({ error: "Geçersiz kimlik." }, { status: 400 });
   const parsed = z.object({ isPublished: z.boolean().optional(), isVip: z.boolean().optional() }).safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Geçersiz istek." }, { status: 400 });
-  await adminPatchScene(id, parsed.data);
+  try {
+    await adminPatchScene(id, parsed.data);
+  } catch (err) {
+    return NextResponse.json({ error: (err as Error).message }, { status: 409 });
+  }
   return NextResponse.json({ ok: true });
 }
 

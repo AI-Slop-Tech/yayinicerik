@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Eye, EyeOff, Pencil, Sparkles } from "lucide-react";
-import { formatDuration } from "@kngl/shared";
+import { LICENSE_LABELS, formatDuration, type LicenseType } from "@kngl/shared";
 import { UploadButton } from "./upload-button";
 import { DeleteButton } from "./delete-button";
 
@@ -21,15 +21,20 @@ export interface SceneRowData {
   playCount: number;
   thumbnailUrl: string;
   video: { exists: boolean; size: number };
+  licenseType: LicenseType;
 }
 
 export function SceneTable({ scenes }: { scenes: SceneRowData[] }) {
   const router = useRouter();
-  const [filter, setFilter] = useState<"all" | "missing">("all");
-  const rows = filter === "missing" ? scenes.filter((s) => !s.video.exists) : scenes;
+  const [filter, setFilter] = useState<"all" | "missing" | "unlicensed">("all");
+  const rows =
+    filter === "missing" ? scenes.filter((s) => !s.video.exists)
+    : filter === "unlicensed" ? scenes.filter((s) => s.licenseType === "unknown")
+    : scenes;
 
   async function patch(id: string, body: Record<string, boolean>) {
-    await fetch(`/api/admin/scenes/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const res = await fetch(`/api/admin/scenes/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    if (!res.ok) window.alert(((await res.json().catch(() => ({}))) as { error?: string }).error ?? "İşlem başarısız.");
     router.refresh();
   }
 
@@ -41,6 +46,9 @@ export function SceneTable({ scenes }: { scenes: SceneRowData[] }) {
         </button>
         <button type="button" className={`chip ${filter === "missing" ? "border-primary text-primary" : ""}`} onClick={() => setFilter("missing")}>
           Videosu eksik ({scenes.filter((s) => !s.video.exists).length})
+        </button>
+        <button type="button" className={`chip ${filter === "unlicensed" ? "border-primary text-primary" : ""}`} onClick={() => setFilter("unlicensed")}>
+          Lisansı belirsiz ({scenes.filter((s) => s.licenseType === "unknown").length})
         </button>
       </div>
       <ul className="card divide-y divide-line">
@@ -64,6 +72,7 @@ export function SceneTable({ scenes }: { scenes: SceneRowData[] }) {
                 <span className={`chip ${s.video.exists ? "text-green" : "text-rec"}`}>
                   <span className={`size-1.5 rounded-full ${s.video.exists ? "bg-green" : "bg-rec"}`} /> {s.video.exists ? "Video yüklü" : "Video yok"}
                 </span>
+                <span className={`chip ${s.licenseType === "unknown" ? "text-rec" : ""}`}>{LICENSE_LABELS[s.licenseType]}</span>
               </div>
               <p className="mt-1 text-xs text-ink-faint">
                 {s.source} · {formatDuration(s.durationSeconds)} · {s.roles} rol · {s.lines} replik · {s.playCount.toLocaleString("tr-TR")} oynanma ·{" "}
