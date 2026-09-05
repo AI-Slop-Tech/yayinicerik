@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2, Plus, Save, Trash2 } from "lucide-react";
+import { LineStudio } from "./line-studio";
 import { LICENSE_LABELS, type LicenseType, type SceneCharacter, type SceneLine } from "@kngl/shared";
 
 export interface SceneFormValues {
@@ -47,7 +48,17 @@ const LICENSE_HINTS: Record<LicenseType, string> = {
   own: "Kendi ürettiğimiz içerik. Kaynak zorunlu değil.",
 };
 
-export function SceneForm({ sceneId, initial }: { sceneId?: string; initial?: SceneFormValues }) {
+export function SceneForm({
+  sceneId,
+  initial,
+  videoUrl = "",
+  hasVideo = false,
+}: {
+  sceneId?: string;
+  initial?: SceneFormValues;
+  videoUrl?: string;
+  hasVideo?: boolean;
+}) {
   const router = useRouter();
   const [v, setV] = useState<SceneFormValues>(initial ?? empty);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial));
@@ -66,14 +77,6 @@ export function SceneForm({ sceneId, initial }: { sceneId?: string; initial?: Sc
       return;
     }
     set("characters", v.characters.filter((c) => c.id !== id));
-  }
-  function addLine() {
-    const last = v.lines[v.lines.length - 1];
-    const start = last ? Math.min(v.durationSeconds - 1, last.end + 0.5) : 0;
-    set("lines", [...v.lines, { id: `l${Date.now().toString(36)}`, characterId: v.characters[0]?.id ?? "c1", text: "", start, end: Math.min(v.durationSeconds, start + 4) }]);
-  }
-  function updLine(i: number, patch: Partial<SceneLine>) {
-    set("lines", v.lines.map((l, idx) => (idx === i ? { ...l, ...patch } : l)));
   }
 
   async function submit(e: React.FormEvent) {
@@ -122,6 +125,7 @@ export function SceneForm({ sceneId, initial }: { sceneId?: string; initial?: Sc
         <div>
           <label className="mb-1.5 block text-sm font-medium" htmlFor="dur">Süre (saniye)</label>
           <input id="dur" type="number" min={1} max={900} className="input" value={v.durationSeconds} onChange={(e) => set("durationSeconds", Number(e.target.value))} />
+          {hasVideo && <p className="mt-1 text-xs text-ink-faint">Video yüklendiğinde otomatik dolar.</p>}
         </div>
         <div className="flex flex-col justify-end gap-2 text-sm">
           <label className="flex items-center gap-2"><input type="checkbox" checked={v.isPublished} onChange={(e) => set("isPublished", e.target.checked)} /> Yayında</label>
@@ -180,29 +184,19 @@ export function SceneForm({ sceneId, initial }: { sceneId?: string; initial?: Sc
       </section>
 
       <section className="card p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-lg font-bold">Replikler</h2>
-          <button type="button" className="btn btn-secondary px-3 py-1.5 text-xs" onClick={addLine} disabled={v.lines.length >= 60}>
-            <Plus className="size-3.5" aria-hidden /> Replik ekle
-          </button>
-        </div>
-        <p className="mb-3 text-xs text-ink-faint">Başlangıç ve bitiş saniyeleri videodaki konuşma aralığıdır; oyuncu bu aralıkta kayıt yapar.</p>
-        <ol className="space-y-3">
-          {v.lines.map((l, i) => (
-            <li key={l.id} className="grid gap-2 rounded-xl border border-line bg-bg-alt p-3 sm:grid-cols-[2rem_9rem_1fr_5rem_5rem_2.5rem] sm:items-center">
-              <span className="font-mono text-xs text-ink-faint">{i + 1}</span>
-              <select className="input py-2 text-sm" value={l.characterId} onChange={(e) => updLine(i, { characterId: e.target.value })}>
-                {v.characters.map((c) => <option key={c.id} value={c.id}>{c.name || c.id}</option>)}
-              </select>
-              <input className="input py-2 text-sm" placeholder="Replik metni" value={l.text} required maxLength={300} onChange={(e) => updLine(i, { text: e.target.value })} />
-              <input type="number" step={0.1} min={0} className="input py-2 text-sm" aria-label="Başlangıç" value={l.start} onChange={(e) => updLine(i, { start: Number(e.target.value) })} />
-              <input type="number" step={0.1} min={0} className="input py-2 text-sm" aria-label="Bitiş" value={l.end} onChange={(e) => updLine(i, { end: Number(e.target.value) })} />
-              <button type="button" className="btn btn-ghost px-2 text-rec" aria-label="Repliği sil" onClick={() => set("lines", v.lines.filter((_, idx) => idx !== i))} disabled={v.lines.length <= 1}>
-                <Trash2 className="size-4" aria-hidden />
-              </button>
-            </li>
-          ))}
-        </ol>
+        <h2 className="font-display text-lg font-bold">Replikler</h2>
+        <p className="mt-1 mb-4 text-xs text-ink-faint">
+          Videoyu oynat, konuşma başlarken başlangıcı, biterken bitişi işaretle. Oyuncu tam bu aralıkta kayıt yapar.
+        </p>
+        <LineStudio
+          videoUrl={videoUrl}
+          hasVideo={hasVideo}
+          duration={v.durationSeconds}
+          characters={v.characters}
+          lines={v.lines}
+          onChange={(lines) => set("lines", lines)}
+          onDurationDetected={(sec) => setV((s) => (s.durationSeconds === sec ? s : { ...s, durationSeconds: sec }))}
+        />
       </section>
 
       {msg && (
