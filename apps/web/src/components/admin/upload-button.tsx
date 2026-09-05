@@ -57,18 +57,24 @@ export function UploadButton({
           onDone?.(body);
         }
       } else {
-        let msg = `Yükleme başarısız (${xhr.status}).`;
+        let msg = `Yükleme başarısız (HTTP ${xhr.status}).`;
         try {
           msg = (JSON.parse(xhr.responseText) as { error?: string }).error ?? msg;
         } catch {
-          /* gövde JSON değil */
+          // Gövde JSON değil: ham yanıtın başını göster, sorunu kestirmek kolaylaşsın.
+          const raw = xhr.responseText.trim().slice(0, 160);
+          if (raw) msg = `${msg} ${raw}`;
         }
         setError(msg);
         setState("error");
       }
     };
     xhr.onerror = () => {
-      setError("Bağlantı hatası. Dosya çok büyükse proxy sınırını (client_max_body_size) kontrol et.");
+      setError("Bağlantı koptu. Sunucu yeniden başlamış olabilir; sayfayı yenileyip tekrar dene. Sürerse yönetim panelindeki disk kutusuna bak.");
+      setState("error");
+    };
+    xhr.ontimeout = () => {
+      setError("İstek zaman aşımına uğradı.");
       setState("error");
     };
     xhr.send(file);

@@ -70,15 +70,15 @@ export function SourceManager({ sources, scenes }: { sources: SourceFile[]; scen
         router.refresh();
       } else {
         try {
-          setError((JSON.parse(xhr.responseText) as { error?: string }).error ?? "Yükleme başarısız.");
+          setError((JSON.parse(xhr.responseText) as { error?: string }).error ?? `Yükleme başarısız (HTTP ${xhr.status}).`);
         } catch {
-          setError(`Yükleme başarısız (${xhr.status}).`);
+          setError(`Yükleme başarısız (HTTP ${xhr.status}). ${xhr.responseText.trim().slice(0, 160)}`);
         }
       }
     };
     xhr.onerror = () => {
       setUploading(null);
-      setError("Bağlantı hatası.");
+      setError("Bağlantı koptu. Sunucu yeniden başlamış olabilir; sayfayı yenileyip tekrar dene.");
     };
     xhr.send(file);
   }

@@ -21,8 +21,11 @@ RUN npm run build -w @kngl/shared && npm run build -w @kngl/web
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
-RUN addgroup -g 10001 -S kngl && adduser -u 10001 -S kngl -G kngl \
- && mkdir -p /data/uploads /data/media/scenes /data/media/thumbs /data/media/dubs && chown -R kngl:kngl /data
+# su-exec: entrypoint root olarak volume sahipliğini düzeltip uygulamaya kngl kullanıcısıyla geçer.
+RUN apk add --no-cache su-exec \
+ && addgroup -g 10001 -S kngl && adduser -u 10001 -S kngl -G kngl \
+ && mkdir -p /data/uploads /data/media/scenes /data/media/thumbs /data/media/dubs /data/media/sources \
+ && chown -R kngl:kngl /data
 COPY --from=build --chown=kngl:kngl /app/apps/web/.next/standalone ./
 COPY --from=build --chown=kngl:kngl /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build --chown=kngl:kngl /app/apps/web/public ./apps/web/public
@@ -31,7 +34,7 @@ COPY --chown=kngl:kngl scripts/migrate.mjs scripts/seed.mjs ./scripts/
 COPY --chown=kngl:kngl infra/db ./infra/db
 COPY --chown=kngl:kngl apps/web/docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
-USER kngl
+# USER ayarlanmaz: entrypoint root başlar, sahipliği düzeltir, sonra su-exec ile kngl olur.
 EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=3s --start-period=20s CMD wget -qO- http://127.0.0.1:3000/api/health || exit 1
 ENTRYPOINT ["./docker-entrypoint.sh"]
