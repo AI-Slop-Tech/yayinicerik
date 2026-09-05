@@ -2,6 +2,7 @@
 #   nginx (kenar) → web (Next.js) → postgres / redis
 #                 → realtime (Socket.IO, Redis adapter)
 #   worker (BullMQ + ffmpeg) ← redis kuyruğu
+# Şema migrasyonu ve ilk seed web konteynerinin açılışında çalışır (apps/web/docker-entrypoint.sh).
 #
 # Coolify: New Resource → Docker Compose, dosya yolu /docker-compose.yml, alan adını yalnızca nginx servisine verin.
 #   SERVICE_PASSWORD_64_SESSION, SERVICE_PASSWORD_POSTGRES ve SERVICE_URL_NGINX değerlerini Coolify kendisi üretir.
@@ -52,8 +53,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      migrate:
-        condition: service_completed_successfully
     restart: unless-stopped
 
   realtime:
@@ -97,19 +96,6 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
-
-  migrate:
-    build:
-      context: .
-      dockerfile: apps/worker/Dockerfile
-      target: build
-    command: sh -c "node scripts/migrate.mjs && node scripts/seed.mjs"
-    environment:
-      - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
 
   postgres:
     image: postgres:16-alpine

@@ -1,4 +1,5 @@
-// Sahne kataloğunu ve örnek dublajları ekler (slug üzerinden idempotent upsert).
+// Örnek sahne kataloğunu ve dublajları ekler. Yalnızca eksik olanları ekler; var olanlara dokunmaz
+// (yönetim panelindeki düzenlemeler korunur). Her açılışta güvenle çalıştırılabilir.
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import pg from "pg";
@@ -8,16 +9,13 @@ await client.connect();
 const scenes = JSON.parse(await readFile(path.resolve("infra/db/seed/scenes.json"), "utf8"));
 const dubs = JSON.parse(await readFile(path.resolve("infra/db/seed/dubs.json"), "utf8"));
 
+await client.query("SELECT pg_advisory_lock(727002)");
 await client.query("BEGIN");
 for (const s of scenes) {
   await client.query(
     `INSERT INTO scenes (slug, title, source, description, duration_seconds, thumbnail_url, video_url, is_vip, play_count, characters, lines, created_at)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,$11::jsonb, COALESCE($12::timestamptz, now()))
-     ON CONFLICT (slug) DO UPDATE SET
-       title = EXCLUDED.title, source = EXCLUDED.source, description = EXCLUDED.description,
-       duration_seconds = EXCLUDED.duration_seconds, thumbnail_url = EXCLUDED.thumbnail_url,
-       video_url = EXCLUDED.video_url, is_vip = EXCLUDED.is_vip, characters = EXCLUDED.characters,
-       lines = EXCLUDED.lines, updated_at = now()`,
+     ON CONFLICT (slug) DO NOTHING`,
     [s.slug, s.title, s.source, s.description, s.durationSeconds, s.thumbnailUrl, s.videoUrl, !!s.isVip, s.playCount ?? 0,
      JSON.stringify(s.characters), JSON.stringify(s.lines), s.createdAt ?? null],
   );
@@ -34,5 +32,6 @@ for (const d of dubs) {
   );
 }
 await client.query("COMMIT");
+await client.query("SELECT pg_advisory_unlock(727002)");
 await client.end();
 console.log(`Seed tamam: ${scenes.length} sahne, ${dubs.length} dublaj.`);
