@@ -73,41 +73,29 @@ Video olmadan da oyun akışı çalışır: kayıt bileşeni süre tabanlı geri
 ## Üretim
 
 ```bash
-cp .env.example .env && $EDITOR .env      # SERVICE_PASSWORD_64_SESSION, SERVICE_PASSWORD_POSTGRES, SERVICE_URL_NGINX
+cp .env.example .env && $EDITOR .env      # SERVICE_PASSWORD_64_SESSION, SERVICE_PASSWORD_POSTGRES, PUBLIC_URL
 docker compose up -d --build
 ```
 
-Siteye iki yoldan erişilir ve ikisi birlikte çalışır:
+Site `http://SUNUCU_IP:8080` adresinden açılır (`HTTP_PORT`). Realtime kendi portunda yayımlanır: `4001` (`REALTIME_PORT`).
+Tarayıcı, `NEXT_PUBLIC_REALTIME_URL` boşsa Socket.IO'ya otomatik olarak `http://AYNI_HOST:4001` üzerinden bağlanır.
 
-1. **Doğrudan port** — nginx sunucunun `HTTP_PORT` portuna bağlanır (varsayılan 8080): `http://SUNUCU_IP:8080`.
-   Hiçbir proxy ayarı gerektirmez; alan adı ya da sertifika beklemeden çalışır.
-2. **Alan adı** — nginx servisi Traefik etiketleri taşır ve `coolify` ağına bağlanır. Alan adı `PUBLIC_HOST`
-   değişkeninden (yoksa Coolify'ın `COOLIFY_FQDN` değerinden) alınır. Coolify dışı kurulumda önce
-   `docker network create coolify` çalıştır.
-
-80 portu proxy tarafından kullanıldığı için varsayılan 8080'dir; boştaysa `HTTP_PORT=80` verebilirsin. TLS'i proxy sonlandırır;
-`X-Forwarded-Proto` iletilir.
+Ters proxy (Coolify/Traefik, Caddy, nginx) kullanmak istersen bu portların önüne koyabilirsin; zorunlu değildir. O durumda
+`NEXT_PUBLIC_REALTIME_URL` değerine realtime'ın dışarıdan görünen adresini yaz ve `CORS_ORIGINS`'e site adresini ekle.
+Örnek bir kenar yapılandırması `infra/nginx/` altında durur (mikro-önbellek, hız sınırları, WebSocket yönlendirme).
 
 Ölçekleme: uygulama durumsuzdur; web/realtime/worker kopyalarını Swarm, Kubernetes ya da ayrı sunucularda çoğaltabilirsin.
 Compose dosyasında bilinçli olarak `deploy.replicas` yoktur: Coolify konteyner adlarını kendisi verir ve replika ile çakışır.
 
-### Coolify ile dağıtım (önerilen yol)
+### Coolify ile dağıtım
 
 1. Coolify → **New Resource → Docker Compose**, depo `AI-Slop-Tech/yayinicerik`, dal `main`, dosya yolu `/docker-compose.yml`.
-2. Alan adı: **Environment Variables** ekranına `PUBLIC_HOST=kngldublaj.com` ekle (DNS A kaydı sunucu IP'sine bakmalı).
-   Eklenmezse Coolify'ın verdiği `*.sslip.io` adresi kullanılır. Yönlendirme compose'daki Traefik etiketleriyle yapılır;
-   arayüzde ayrıca "Domains" ayarı gerekmez.
-3. Deploy. `SESSION_SECRET`, Postgres şifresi ve site adresi Coolify'ın magic değişkenleriyle otomatik üretilir; elle değer girmek gerekmez.
-   Deploy bittiğinde site hemen `http://SUNUCU_IP:8080` adresinden açılır; alan adı yönlendirmesi ayrıca çalışır.
-   İlk derleme dört imaj ürettiği için 5–10 dakika sürebilir. Şema ve örnek katalog web konteynerinin açılışında otomatik yüklenir.
-4. Sahne videolarını yönetim panelinden yükle: `https://alan-adin/admin` → şifre Coolify'daki `SERVICE_PASSWORD_ADMIN` değeri
-   (Environment Variables ekranında görünür). Panelde sahne ekleyebilir, rolleri ve replik zamanlarını düzenleyebilir, MP4 video ve
-   afiş yükleyebilir, prömiyerleri öne çıkarabilir ve önerileri görebilirsin.
-
-**Alternatif: Railpack / Nixpacks (yalnızca web).** Coolify'ın varsayılan "Application" kaynağı depoyu tek Node uygulaması olarak
-derler; kökteki `npm run build` ve `npm start` bunun için hazırdır (port 3000). Bu yolda Postgres, Redis, realtime ve worker ayrı
-kaynak olarak kurulmalı ve web'e `SESSION_SECRET`, `DATABASE_URL`, `REDIS_URL`, `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_REALTIME_URL`
-verilmelidir. Web tek başına açılır; `/durum` sayfası eksik bağımlılığı gösterir, oyun akışı realtime + worker olmadan tamamlanmaz.
+2. Deploy. Alan adı ya da proxy ayarı gerekmez.
+3. Site `http://SUNUCU_IP:8080` adresinden açılır. Sunucuda güvenlik duvarı varsa 8080 ve 4001 portlarını aç.
+4. Yönetim paneli `http://SUNUCU_IP:8080/admin`; şifre Coolify'ın ürettiği `SERVICE_PASSWORD_ADMIN` değeridir
+   (Environment Variables ekranında görünür).
+5. Kendi alan adını bağlayacaksan Coolify'da `web` servisine alan adını tanımla, `PUBLIC_URL` ve `NEXT_PUBLIC_REALTIME_URL`
+   değerlerini buna göre ayarla.
 
 Yazı tipleri repoya gömülüdür (`apps/web/src/fonts`), derleme sırasında internet gerekmez.
 

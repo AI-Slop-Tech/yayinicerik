@@ -6,6 +6,21 @@ import { EVENTS, type RoomState } from "@kngl/shared";
 
 export type ConnectionStatus = "connecting" | "connected" | "reconnecting" | "error";
 
+/** Realtime sunucusu web ile aynı ana makinede, kendi portunda yayımlanır. */
+const DEFAULT_REALTIME_PORT = "4001";
+
+/**
+ * Bağlanılacak Socket.IO adresi:
+ * - NEXT_PUBLIC_REALTIME_URL verilmişse o kullanılır (ters proxy arkasında tam adres).
+ * - Verilmemişse sayfanın ana makinesi + realtime portu denenir (doğrudan port erişimi).
+ */
+function resolveRealtimeUrl(configured: string): string | undefined {
+  if (configured) return configured;
+  if (typeof window === "undefined") return undefined;
+  const { protocol, hostname } = window.location;
+  return `${protocol}//${hostname}:${DEFAULT_REALTIME_PORT}`;
+}
+
 /**
  * Odaya bağlanır, durum akışını tutar. Yeniden bağlanmada otomatik olarak tekrar katılır.
  * Ses verisi bu kanaldan geçmez; yalnızca küçük durum olayları.
@@ -17,7 +32,7 @@ export function useRoomSocket(code: string, token: string, realtimeUrl: string, 
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    const socket = io(realtimeUrl || undefined, {
+    const socket = io(resolveRealtimeUrl(realtimeUrl), {
       path: "/socket.io",
       auth: { token },
       transports: ["websocket", "polling"],
