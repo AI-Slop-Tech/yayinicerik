@@ -10,6 +10,7 @@ export const env = {
   /** Tarayıcının final videoyu göreceği taban URL. */
   MEDIA_BASE_URL: process.env.MEDIA_BASE_URL ?? "/media",
   FFMPEG_PATH: process.env.FFMPEG_PATH ?? "ffmpeg",
+  FFPROBE_PATH: process.env.FFPROBE_PATH ?? "ffprobe",
   /** Aynı anda kaç render (CPU çekirdeği sayısına göre ayarla). */
   CONCURRENCY: Number(process.env.RENDER_CONCURRENCY ?? 2),
   WATERMARK_TEXT: process.env.WATERMARK_TEXT ?? "KNGL Dublaj",

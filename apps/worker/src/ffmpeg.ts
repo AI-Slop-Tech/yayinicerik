@@ -1,4 +1,5 @@
-import { spawn } from "node:child_process";
+import { spawn, execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { env } from "./env.js";
 
 export interface MixInput {
@@ -19,6 +20,26 @@ export interface MixOptions {
   watermark: string | null;
   /** Orijinal sesin ne kadarı kalsın (0 = tamamen kapat, 0.15 = arka plan için biraz bırak). */
   originalGain: number;
+  /** Kaynak videoda ses kanalı var mı? Sessiz filmlerde (kamu malı arşivlerde sık) yoktur. */
+  hasOriginalAudio: boolean;
+}
+
+const execFileAsync = promisify(execFile);
+
+/**
+ * Kaynak videonun ses kanalı olup olmadığını ffprobe ile belirler.
+ * Sessiz bir videoda `[0:a]` filtresi kurulursa ffmpeg "invalid stream specifier" ile düşer.
+ */
+export async function hasAudioStream(file: string): Promise<boolean> {
+  try {
+    const { stdout } = await execFileAsync(env.FFPROBE_PATH, [
+      "-v", "error", "-select_streams", "a:0", "-show_entries", "stream=codec_type", "-of", "csv=p=0", file,
+    ]);
+    return stdout.trim().length > 0;
+  } catch {
+    // ffprobe yoksa ya da dosya okunamadıysa sesi yokmuş gibi davran: render yine tamamlanır.
+    return false;
+  }
 }
 
 /**
@@ -33,8 +54,10 @@ export function buildArgs(o: MixOptions): string[] {
 
   const filters: string[] = [];
   const mixInputs: string[] = [];
-  filters.push(`[0:a]volume=${o.originalGain}[orig]`);
-  mixInputs.push("[orig]");
+  if (o.hasOriginalAudio) {
+    filters.push(`[0:a]volume=${o.originalGain}[orig]`);
+    mixInputs.push("[orig]");
+  }
   o.takes.forEach((t, i) => {
     const idx = i + 1;
     const delayMs = Math.max(0, Math.round(t.start * 1000));
@@ -44,7 +67,16 @@ export function buildArgs(o: MixOptions): string[] {
     );
     mixInputs.push(`[t${idx}]`);
   });
-  filters.push(`${mixInputs.join("")}amix=inputs=${mixInputs.length}:duration=first:normalize=0[aout]`);
+  if (mixInputs.length === 0) {
+    // Ne orijinal ses ne de kayıt var: sessiz bir ses kanalı üret ki çıktı hep aynı biçimde olsun.
+    args.push("-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000");
+    filters.push(`[${o.takes.length + 1}:a]anull[aout]`);
+  } else if (mixInputs.length === 1) {
+    filters.push(`${mixInputs[0]}anull[aout]`);
+  } else {
+    // duration=longest: orijinal ses yoksa kayıtların tamamı korunur.
+    filters.push(`${mixInputs.join("")}amix=inputs=${mixInputs.length}:duration=longest:normalize=0[aout]`);
+  }
 
   const vf = [`scale=-2:${o.height}`];
   if (o.watermark) {
