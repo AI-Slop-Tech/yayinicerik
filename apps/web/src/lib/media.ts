@@ -10,7 +10,8 @@ import { env } from "./env";
  * Medya dosyaları: MEDIA_DIR altında scenes/, thumbs/, dubs/.
  * nginx bunları /media/... olarak servis eder; geliştirmede app/media/[...path] rotası devreye girer.
  */
-export type MediaKind = "scenes" | "thumbs" | "dubs";
+/** sources: yönetim panelinden yüklenen ham kaynaklar; kesildikten sonra silinir. */
+export type MediaKind = "scenes" | "thumbs" | "dubs" | "sources";
 
 const SAFE_NAME = /^[a-z0-9][a-z0-9._-]{0,120}$/;
 
@@ -72,4 +73,76 @@ export async function saveMediaStream(kind: MediaKind, fileName: string, body: R
 export async function deleteMedia(kind: MediaKind, fileName: string): Promise<void> {
   assertSafeName(fileName);
   await unlink(path.join(mediaDir(kind), fileName)).catch(() => {});
+}
+
+/* ------------------------------------------------------------------ */
+/* Kaynak videolar ve disk kullanımı                                   */
+/* ------------------------------------------------------------------ */
+
+export interface SourceFile {
+  name: string;
+  bytes: number;
+  mtime: string;
+}
+
+/** Yönetim panelinden yüklenmiş, henüz kesilmemiş kaynak videolar. */
+export async function listSources(): Promise<SourceFile[]> {
+  const { readdir, stat } = await import("node:fs/promises");
+  const dir = mediaDir("sources");
+  const names = await readdir(dir).catch(() => [] as string[]);
+  const out: SourceFile[] = [];
+  for (const name of names) {
+    if (name.endsWith(".part") || name.includes(".part-")) continue;
+    const info = await stat(path.join(dir, name)).catch(() => null);
+    if (info?.isFile()) out.push({ name, bytes: info.size, mtime: info.mtime.toISOString() });
+  }
+  return out.sort((a, b) => b.mtime.localeCompare(a.mtime));
+}
+
+export function sourcePath(name: string): string {
+  return path.join(mediaDir("sources"), assertSafeName(name));
+}
+
+async function dirBytes(dir: string): Promise<number> {
+  const { readdir, stat } = await import("node:fs/promises");
+  const entries = await readdir(dir, { withFileTypes: true }).catch(() => []);
+  let total = 0;
+  for (const e of entries) {
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) total += await dirBytes(full);
+    else {
+      const info = await stat(full).catch(() => null);
+      if (info) total += info.size;
+    }
+  }
+  return total;
+}
+
+export interface DiskUsage {
+  scenes: number;
+  thumbs: number;
+  dubs: number;
+  sources: number;
+  /** Kaynaklar için tanımlı üst sınır (bayt). */
+  sourceLimit: number;
+  /** Dosya sisteminde kalan boş alan (bayt); okunamazsa null. */
+  free: number | null;
+}
+
+export async function diskUsage(): Promise<DiskUsage> {
+  const { statfs } = await import("node:fs/promises");
+  const [scenes, thumbs, dubs, sources] = await Promise.all([
+    dirBytes(mediaDir("scenes")),
+    dirBytes(mediaDir("thumbs")),
+    dirBytes(mediaDir("dubs")),
+    dirBytes(mediaDir("sources")),
+  ]);
+  let free: number | null = null;
+  try {
+    const fs = await statfs(env().MEDIA_DIR);
+    free = Number(fs.bavail) * Number(fs.bsize);
+  } catch {
+    free = null;
+  }
+  return { scenes, thumbs, dubs, sources, sourceLimit: env().MAX_SOURCE_GB * 1024 ** 3, free };
 }

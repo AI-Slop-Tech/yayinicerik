@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 const NAV = [
   { href: "/admin", label: "Sahneler" },
   { href: "/admin/sahne/yeni", label: "Yeni sahne" },
+  { href: "/admin/kaynaklar", label: "Kaynaklar" },
   { href: "/admin/dublajlar", label: "Prömiyerler" },
   { href: "/admin/oneriler", label: "Öneriler" },
 ];

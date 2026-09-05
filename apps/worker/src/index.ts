@@ -4,9 +4,11 @@ import pg from "pg";
 import pino from "pino";
 import { mkdir, rm, stat } from "node:fs/promises";
 import path from "node:path";
-import { LIMITS, QUEUE_NAMES, ROOM_EVENTS_CHANNEL, keys, type RenderJobData, type RoomState } from "@kngl/shared";
+import { LIMITS, QUEUE_NAMES, ROOM_EVENTS_CHANNEL, keys, type MediaJobData, type RenderJobData, type RoomState } from "@kngl/shared";
 import { env } from "./env.js";
 import { buildArgs, hasAudioStream, runFfmpeg } from "./ffmpeg.js";
+import { processMediaJob } from "./media.js";
+import { runCleanup } from "./cleanup.js";
 
 const log = pino({ level: env.LOG_LEVEL });
 const redis = new Redis(env.REDIS_URL, { maxRetriesPerRequest: null });
@@ -106,11 +108,28 @@ worker.on("failed", async (job, err) => {
     await patchRoom(job.data.roomCode, { phase: "failed", error: "Video üretilemedi. Oda sahibi yeniden başlatabilir." }).catch(() => {});
   }
 });
-worker.on("ready", () => log.info({ concurrency: env.CONCURRENCY }, "worker ready"));
+worker.on("ready", () => log.info({ concurrency: env.CONCURRENCY }, "render worker ready"));
+
+/* ---------- Sahne videosu hazırlama (kesme + sıkıştırma) ---------- */
+const mediaWorker = new Worker<MediaJobData>(QUEUE_NAMES.media, (job) => processMediaJob(job), {
+  connection: redis,
+  // Yeniden kodlama CPU yoğun; render ile yarışmasın diye tek iş.
+  concurrency: 1,
+  lockDuration: 25 * 60_000,
+});
+mediaWorker.on("completed", (job, res) => log.info({ slug: job.data.sceneSlug, kind: job.data.kind, ...res }, "sahne videosu hazır"));
+mediaWorker.on("failed", (job, err) => log.error({ slug: job?.data.sceneSlug, err: err.message }, "sahne videosu hazırlanamadı"));
+mediaWorker.on("ready", () => log.info("media worker ready"));
+
+/* ---------- Disk temizliği: açılışta ve saatte bir ---------- */
+void runCleanup(pool, redis, log);
+const cleanupTimer = setInterval(() => void runCleanup(pool, redis, log), 60 * 60_000);
+cleanupTimer.unref();
 
 async function shutdown(signal: string) {
   log.info({ signal }, "worker shutting down");
-  await worker.close();
+  clearInterval(cleanupTimer);
+  await Promise.allSettled([worker.close(), mediaWorker.close()]);
   await pool.end();
   redis.disconnect();
   process.exit(0);
