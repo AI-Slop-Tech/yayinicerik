@@ -77,9 +77,15 @@ cp .env.example .env && $EDITOR .env      # SERVICE_PASSWORD_64_SESSION, SERVICE
 docker compose up -d --build
 ```
 
-Compose dosyası host portu bağlamaz (`expose: 80`); önündeki proxy (Coolify, Traefik, Caddy) nginx'e yönlendirir. nginx servisi
-`coolify` adlı harici ağa bağlanır; Coolify dışı kurulumda önce `docker network create coolify` çalıştır. Proxy'siz bir sunucuda
-`cp docker-compose.override.example.yml docker-compose.override.yml` ile 80 portunu dışarı açabilirsin. TLS'i proxy sonlandırır;
+Siteye iki yoldan erişilir ve ikisi birlikte çalışır:
+
+1. **Doğrudan port** — nginx sunucunun `HTTP_PORT` portuna bağlanır (varsayılan 8080): `http://SUNUCU_IP:8080`.
+   Hiçbir proxy ayarı gerektirmez; alan adı ya da sertifika beklemeden çalışır.
+2. **Alan adı** — nginx servisi Traefik etiketleri taşır ve `coolify` ağına bağlanır. Alan adı `PUBLIC_HOST`
+   değişkeninden (yoksa Coolify'ın `COOLIFY_FQDN` değerinden) alınır. Coolify dışı kurulumda önce
+   `docker network create coolify` çalıştır.
+
+80 portu proxy tarafından kullanıldığı için varsayılan 8080'dir; boştaysa `HTTP_PORT=80` verebilirsin. TLS'i proxy sonlandırır;
 `X-Forwarded-Proto` iletilir.
 
 Ölçekleme: uygulama durumsuzdur; web/realtime/worker kopyalarını Swarm, Kubernetes ya da ayrı sunucularda çoğaltabilirsin.
@@ -92,6 +98,7 @@ Compose dosyasında bilinçli olarak `deploy.replicas` yoktur: Coolify konteyner
    Eklenmezse Coolify'ın verdiği `*.sslip.io` adresi kullanılır. Yönlendirme compose'daki Traefik etiketleriyle yapılır;
    arayüzde ayrıca "Domains" ayarı gerekmez.
 3. Deploy. `SESSION_SECRET`, Postgres şifresi ve site adresi Coolify'ın magic değişkenleriyle otomatik üretilir; elle değer girmek gerekmez.
+   Deploy bittiğinde site hemen `http://SUNUCU_IP:8080` adresinden açılır; alan adı yönlendirmesi ayrıca çalışır.
    İlk derleme dört imaj ürettiği için 5–10 dakika sürebilir. Şema ve örnek katalog web konteynerinin açılışında otomatik yüklenir.
 4. Sahne videolarını yönetim panelinden yükle: `https://alan-adin/admin` → şifre Coolify'daki `SERVICE_PASSWORD_ADMIN` değeri
    (Environment Variables ekranında görünür). Panelde sahne ekleyebilir, rolleri ve replik zamanlarını düzenleyebilir, MP4 video ve
