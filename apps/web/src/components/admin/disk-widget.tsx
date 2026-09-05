@@ -22,6 +22,12 @@ export async function DiskWidget() {
   return (
     <div className="card p-4">
       <h2 className="text-xs font-semibold tracking-widest text-ink-faint">DİSK</h2>
+      {!d.writable && (
+        <p role="alert" className="mt-2 rounded-xl border border-rec/40 bg-rec/10 p-3 text-sm">
+          <strong>Medya dizinine yazılamıyor.</strong> Video yüklemeleri çalışmaz.
+          {d.writeError && <span className="mt-1 block font-mono text-xs">{d.writeError}</span>}
+        </p>
+      )}
       <p className="mt-2 font-display text-2xl font-extrabold">{fmtBytes(total)}</p>
       <p className="text-xs text-ink-faint">medya toplamı{d.free !== null && <> · sunucuda {fmtBytes(d.free)} boş</>}</p>
       <ul className="mt-3 space-y-1 text-sm">

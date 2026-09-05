@@ -118,6 +118,20 @@ async function dirBytes(dir: string): Promise<number> {
   return total;
 }
 
+/** Medya dizinine gerçekten yazılabiliyor mu? Paylaşılan volume sahipliği bozuksa burada anlaşılır. */
+export async function mediaWritable(): Promise<{ ok: boolean; error?: string }> {
+  const { mkdir, writeFile, unlink } = await import("node:fs/promises");
+  const probe = path.join(mediaDir("scenes"), `.write-probe-${process.pid}`);
+  try {
+    await mkdir(mediaDir("scenes"), { recursive: true });
+    await writeFile(probe, "ok");
+    await unlink(probe);
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: (err as Error).message };
+  }
+}
+
 export interface DiskUsage {
   scenes: number;
   thumbs: number;
@@ -127,6 +141,9 @@ export interface DiskUsage {
   sourceLimit: number;
   /** Dosya sisteminde kalan boş alan (bayt); okunamazsa null. */
   free: number | null;
+  /** Medya dizinine yazılabiliyor mu? false ise yüklemeler çalışmaz. */
+  writable: boolean;
+  writeError?: string;
 }
 
 export async function diskUsage(): Promise<DiskUsage> {
@@ -144,5 +161,6 @@ export async function diskUsage(): Promise<DiskUsage> {
   } catch {
     free = null;
   }
-  return { scenes, thumbs, dubs, sources, sourceLimit: env().MAX_SOURCE_GB * 1024 ** 3, free };
+  const w = await mediaWritable();
+  return { scenes, thumbs, dubs, sources, sourceLimit: env().MAX_SOURCE_GB * 1024 ** 3, free, writable: w.ok, writeError: w.error };
 }
