@@ -1,11 +1,15 @@
 # KNGL Dublaj — üretim topolojisi (Coolify ile birebir uyumlu; düz `docker compose` ile de çalışır)
-#   nginx (kenar) → web (Next.js) → postgres / redis
-#                 → realtime (Socket.IO, Redis adapter)
-#   worker (BullMQ + ffmpeg) ← redis kuyruğu
+#   web (Next.js, sayfalar + API + medya servisi)  →  postgres / redis
+#   realtime (Socket.IO, Redis adapter)            →  redis
+#   worker (BullMQ + ffmpeg)                       ←  redis kuyruğu
+#
+# Erişim: http://SUNUCU_IP:8080 (HTTP_PORT). Realtime kendi portunda: 4001 (REALTIME_PORT).
+# Ters proxy (Coolify/Traefik/Caddy) kullanmak istersen bu portların önüne koyabilirsin; zorunlu değil.
 # Şema migrasyonu ve ilk seed web konteynerinin açılışında çalışır (apps/web/docker-entrypoint.sh).
 #
-# Coolify: New Resource → Docker Compose, dosya yolu /docker-compose.yml, alan adını yalnızca nginx servisine verin.
-#   SERVICE_PASSWORD_64_SESSION, SERVICE_PASSWORD_POSTGRES ve SERVICE_URL_NGINX değerlerini Coolify kendisi üretir.
+# Coolify: New Resource → Docker Compose, dosya yolu /docker-compose.yml.
+#   SERVICE_PASSWORD_64_SESSION ve SERVICE_PASSWORD_POSTGRES değerlerini Coolify kendisi üretir.
+#   Alan adı ayarı gerekmez; site yayımlanan porttan açılır.
 # Coolify dışı: aynı üç değişkeni .env dosyasına yazın (bkz. .env.example); proxy'siz sunucuda
 #   docker-compose.override.example.yml ile 80 portunu açın.
 #
@@ -13,52 +17,19 @@
 # replika ile çakışır; portu önündeki proxy yönetir. Yatay ölçekleme için Swarm/Kubernetes ya da ayrı sunucular.
 
 services:
-  nginx:
-    build: ./infra/nginx
-    environment:
-      - SERVICE_FQDN_NGINX_80
-    # Doğrudan erişim: proxy yapılandırmasına bağlı kalmadan site http://SUNUCU_IP:8080 adresinden açılır.
-    # Coolify/Traefik alan adını yönlendirdiğinde de aynı konteyner kullanılır; iki yol birlikte çalışır.
-    # Portu değiştirmek için ortam değişkeni: HTTP_PORT=9090
-    ports:
-      - "${HTTP_PORT:-8080}:80"
-    # Coolify'ın proxy'si (Traefik) için yönlendirme: alan adı PUBLIC_HOST'tan, o yoksa Coolify'ın
-    # kendi COOLIFY_FQDN değerinden alınır. Böylece arayüzde ayrıca "Domains" ayarı gerekmez.
-    # Kendi alan adınız için Coolify → Environment Variables → PUBLIC_HOST=kngldublaj.com yeterlidir.
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=coolify
-      - traefik.http.services.kngl-nginx.loadbalancer.server.port=80
-      - traefik.http.routers.kngl-http.rule=Host(`${PUBLIC_HOST:-${COOLIFY_FQDN:-localhost}}`)
-      - traefik.http.routers.kngl-http.entryPoints=http
-      - traefik.http.routers.kngl-http.service=kngl-nginx
-      - traefik.http.routers.kngl-https.rule=Host(`${PUBLIC_HOST:-${COOLIFY_FQDN:-localhost}}`)
-      - traefik.http.routers.kngl-https.entryPoints=https
-      - traefik.http.routers.kngl-https.tls=true
-      - traefik.http.routers.kngl-https.tls.certresolver=letsencrypt
-      - traefik.http.routers.kngl-https.service=kngl-nginx
-    networks:
-      - default
-      - coolify
-    volumes:
-      - media:/srv/media:ro
-    depends_on:
-      web:
-        condition: service_healthy
-      realtime:
-        condition: service_healthy
-    restart: unless-stopped
-
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+    # Site doğrudan bu porttan açılır: http://SUNUCU_IP:8080
+    ports:
+      - "${HTTP_PORT:-8080}:3000"
     environment:
       - NODE_ENV=production
       - SESSION_SECRET=${SERVICE_PASSWORD_64_SESSION}
       - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
       - REDIS_URL=redis://redis:6379
-      - NEXT_PUBLIC_SITE_URL=${SERVICE_URL_NGINX}
+      - NEXT_PUBLIC_SITE_URL=${PUBLIC_URL:-http://localhost:8080}
       - NEXT_PUBLIC_REALTIME_URL=
       - UPLOAD_DIR=/data/uploads
       - MEDIA_DIR=/data/media
@@ -80,13 +51,16 @@ services:
     build:
       context: .
       dockerfile: apps/realtime/Dockerfile
+    # Tarayıcı Socket.IO'ya bu porttan bağlanır.
+    ports:
+      - "${REALTIME_PORT:-4001}:4000"
     environment:
       - NODE_ENV=production
       - PORT=4000
       - SESSION_SECRET=${SERVICE_PASSWORD_64_SESSION}
       - DATABASE_URL=postgres://kngl:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/kngl
       - REDIS_URL=redis://redis:6379
-      - CORS_ORIGINS=${SERVICE_URL_NGINX}
+      - CORS_ORIGINS=${CORS_ORIGINS:-}
     depends_on:
       postgres:
         condition: service_healthy
@@ -150,9 +124,3 @@ volumes:
   pgdata:
   uploads:
   media:
-
-networks:
-  # Coolify sunucularında hazır bulunan proxy ağı. Coolify dışı kurulumda bir kez oluşturun:
-  #   docker network create coolify
-  coolify:
-    external: true
