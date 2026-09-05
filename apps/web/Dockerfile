@@ -21,7 +21,8 @@ RUN npm run build -w @kngl/shared && npm run build -w @kngl/web
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
-RUN addgroup -S kngl && adduser -S kngl -G kngl && mkdir -p /data/uploads && chown -R kngl:kngl /data
+RUN addgroup -g 10001 -S kngl && adduser -u 10001 -S kngl -G kngl \
+ && mkdir -p /data/uploads /data/media/scenes /data/media/thumbs /data/media/dubs && chown -R kngl:kngl /data
 COPY --from=build --chown=kngl:kngl /app/apps/web/.next/standalone ./
 COPY --from=build --chown=kngl:kngl /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build --chown=kngl:kngl /app/apps/web/public ./apps/web/public
