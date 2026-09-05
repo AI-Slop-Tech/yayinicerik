@@ -19,6 +19,24 @@ services:
       - SERVICE_FQDN_NGINX_80
     expose:
       - "80"
+    # Coolify'ın proxy'si (Traefik) için yönlendirme: alan adı PUBLIC_HOST'tan, o yoksa Coolify'ın
+    # kendi COOLIFY_FQDN değerinden alınır. Böylece arayüzde ayrıca "Domains" ayarı gerekmez.
+    # Kendi alan adınız için Coolify → Environment Variables → PUBLIC_HOST=kngldublaj.com yeterlidir.
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+      - traefik.http.services.kngl-nginx.loadbalancer.server.port=80
+      - traefik.http.routers.kngl-http.rule=Host(`${PUBLIC_HOST:-${COOLIFY_FQDN:-localhost}}`)
+      - traefik.http.routers.kngl-http.entryPoints=http
+      - traefik.http.routers.kngl-http.service=kngl-nginx
+      - traefik.http.routers.kngl-https.rule=Host(`${PUBLIC_HOST:-${COOLIFY_FQDN:-localhost}}`)
+      - traefik.http.routers.kngl-https.entryPoints=https
+      - traefik.http.routers.kngl-https.tls=true
+      - traefik.http.routers.kngl-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.kngl-https.service=kngl-nginx
+    networks:
+      - default
+      - coolify
     volumes:
       - media:/srv/media:ro
     depends_on:
@@ -129,3 +147,9 @@ volumes:
   pgdata:
   uploads:
   media:
+
+networks:
+  # Coolify sunucularında hazır bulunan proxy ağı. Coolify dışı kurulumda bir kez oluşturun:
+  #   docker network create coolify
+  coolify:
+    external: true

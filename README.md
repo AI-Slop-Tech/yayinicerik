@@ -77,7 +77,8 @@ cp .env.example .env && $EDITOR .env      # SERVICE_PASSWORD_64_SESSION, SERVICE
 docker compose up -d --build
 ```
 
-Compose dosyası host portu bağlamaz (`expose: 80`); önündeki proxy (Coolify, Traefik, Caddy) nginx'e yönlendirir. Proxy'siz bir sunucuda
+Compose dosyası host portu bağlamaz (`expose: 80`); önündeki proxy (Coolify, Traefik, Caddy) nginx'e yönlendirir. nginx servisi
+`coolify` adlı harici ağa bağlanır; Coolify dışı kurulumda önce `docker network create coolify` çalıştır. Proxy'siz bir sunucuda
 `cp docker-compose.override.example.yml docker-compose.override.yml` ile 80 portunu dışarı açabilirsin. TLS'i proxy sonlandırır;
 `X-Forwarded-Proto` iletilir.
 
@@ -87,7 +88,9 @@ Compose dosyasında bilinçli olarak `deploy.replicas` yoktur: Coolify konteyner
 ### Coolify ile dağıtım (önerilen yol)
 
 1. Coolify → **New Resource → Docker Compose**, depo `AI-Slop-Tech/yayinicerik`, dal `main`, dosya yolu `/docker-compose.yml`.
-2. Servisler listelendiğinde yalnızca **nginx** servisine alan adını tanımla (ör. `https://kngldublaj.com`).
+2. Alan adı: **Environment Variables** ekranına `PUBLIC_HOST=kngldublaj.com` ekle (DNS A kaydı sunucu IP'sine bakmalı).
+   Eklenmezse Coolify'ın verdiği `*.sslip.io` adresi kullanılır. Yönlendirme compose'daki Traefik etiketleriyle yapılır;
+   arayüzde ayrıca "Domains" ayarı gerekmez.
 3. Deploy. `SESSION_SECRET`, Postgres şifresi ve site adresi Coolify'ın magic değişkenleriyle otomatik üretilir; elle değer girmek gerekmez.
    İlk derleme dört imaj ürettiği için 5–10 dakika sürebilir. Şema ve örnek katalog web konteynerinin açılışında otomatik yüklenir.
 4. Sahne videolarını yönetim panelinden yükle: `https://alan-adin/admin` → şifre Coolify'daki `SERVICE_PASSWORD_ADMIN` değeri
