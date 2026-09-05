@@ -6,7 +6,7 @@ import { mkdir, rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { LIMITS, QUEUE_NAMES, ROOM_EVENTS_CHANNEL, keys, type RenderJobData, type RoomState } from "@kngl/shared";
 import { env } from "./env.js";
-import { buildArgs, runFfmpeg } from "./ffmpeg.js";
+import { buildArgs, hasAudioStream, runFfmpeg } from "./ffmpeg.js";
 
 const log = pino({ level: env.LOG_LEVEL });
 const redis = new Redis(env.REDIS_URL, { maxRetriesPerRequest: null });
@@ -61,6 +61,9 @@ async function render(job: Job<RenderJobData>) {
   const fileName = `${roomCode.toLowerCase()}-${Date.now()}.mp4`;
   const output = path.join(env.OUTPUT_DIR, fileName);
 
+  const hasOriginalAudio = await hasAudioStream(source);
+  if (!hasOriginalAudio) log.info({ roomCode, source }, "kaynak videoda ses kanalı yok; yalnızca kayıtlar karıştırılacak");
+
   const args = buildArgs({
     sceneVideo: source,
     takes: takes.map((t) => ({ path: t.path, start: t.start, maxDuration: Math.min(LIMITS.maxTakeSeconds, Math.max(0.5, t.end - t.start + 0.4)) })),
@@ -68,6 +71,7 @@ async function render(job: Job<RenderJobData>) {
     height: vip ? 1080 : 720,
     watermark: vip ? null : env.WATERMARK_TEXT,
     originalGain: 0.12,
+    hasOriginalAudio,
   });
   await runFfmpeg(args);
   await job.updateProgress(90);
